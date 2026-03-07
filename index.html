@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CryoCore — Intelligent Cold-Chain Logistics for Pharma</title>
+    <meta name="description"
+        content="CryoCore unifies raw material procurement, multimodal route intelligence, live temperature monitoring, and compliance validation into one secure multitenant platform." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            width: 100%;
+        }
+
+        body {
+            background: #050d1a;
+            color: #e8f4ff;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            width: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* ===== DESIGN TOKENS ===== */
+        :root {
+            --bg: #050d1a;
+            --surface: #0a1628;
+            --border: #1a2d4a;
+            --cyan: #00d4ff;
+            --cyan-dim: #0099bb;
+            --success: #00ff9d;
+            --warning: #ffb830;
+            --danger: #ff4757;
+            --text: #e8f4ff;
+            --muted: #6b8aaa;
+            --font-headline: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== TOP CYAN LINE ===== */
+        .top-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), var(--cyan-dim), var(--cyan), transparent);
+            z-index: 10001;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 2px;
+            left: 0;
+            width: 100%;
+            z-index: 10000;
+            padding: 0 48px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease-in-out;
+            background: transparent;
+        }
+
+        .navbar.scrolled {
+            background: rgba(5, 13, 26, 0.75);
+            backdrop-filter: blur(20px) saturate(1.5);
+            -webkit-backdrop-filter: blur(20px) saturate(1.5);
+            border-bottom: 1px solid rgba(26, 45, 74, 0.5);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-headline);
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .nav-logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .btn-login {
+            background: var(--cyan);
+            color: #050d1a;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 10px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-login:hover {
+            background: #33deff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* ===== LOGIN POPUP ===== */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 13, 26, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 20000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .login-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .login-popup {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            width: 400px;
+            max-width: 90vw;
+            text-align: center;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .login-overlay.active .login-popup {
+            transform: translateY(0) scale(1);
+        }
+
+        .login-popup-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            color: var(--muted);
+            font-size: 1.25rem;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .login-popup-close:hover {
+            color: var(--text);
+        }
+
+        .login-popup h3 {
+            font-family: var(--font-headline);
+            font-size: 1.35rem;
+            margin-bottom: 28px;
+            color: var(--text);
+        }
+
+        .btn-portal {
+            display: block;
+            width: 100%;
+            background: var(--cyan);
+            color: #050d1a;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-portal:hover {
+            background: #33deff;
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.3);
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .login-ops-link {
+            color: var(--muted);
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .login-ops-link:hover {
+            color: var(--cyan);
+            text-decoration: underline;
+        }
+
+        /* ===== SECTION STYLES ===== */
+        section {
+            position: relative;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            width: 100%;
+        }
+
+        .section-label {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-label h2 {
+            font-family: var(--font-headline);
+            font-size: 2.6rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-label p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 70px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .hero-inner {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            width: 100%;
+            height: calc(100vh - 70px);
+        }
+
+        .hero-left {
+            flex: 0 0 50%;
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-right {
+            flex: 0 0 50%;
+            max-width: 50%;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 6px 18px 6px 12px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .hero-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.3);
+            }
+        }
+
+        .hero h1 {
+            font-family: var(--font-headline);
+            font-size: clamp(2.2rem, 3.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            color: var(--cyan);
+        }
+
+        .hero-sub {
+            color: var(--muted);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 540px;
+            margin-bottom: 36px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn-primary {
+            background: var(--cyan);
+            color: #050d1a;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background: #33deff;
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--cyan);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 14px 32px;
+            border-radius: 10px;
+            border: 1.5px solid var(--cyan);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .hero-trust {
+            display: flex;
+            gap: 24px;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .hero-trust span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-trust .check {
+            color: var(--success);
+        }
+
+        /* ===== WORLD MAP ===== */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 80%;
+            min-height: 400px;
+        }
+
+        #worldMap {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+        }
+
+        /* ===== DUAL PORTALS ===== */
+        .portals {
+            padding: 120px 0;
+            width: 100%;
+        }
+
+        .portals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .portal-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            min-height: 420px;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 1px;
+            background: transparent;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            transition: background 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        .portal-card.ops:hover::before {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.5), transparent 60%);
+        }
+
+        .portal-card.client:hover::before {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.5), transparent 60%);
+        }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .portal-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            margin-bottom: 24px;
+        }
+
+        .portal-card.ops .portal-icon {
+            background: rgba(255, 71, 87, 0.12);
+            border: 1px solid rgba(255, 71, 87, 0.25);
+        }
+
+        .portal-card.client .portal-icon {
+            background: rgba(0, 212, 255, 0.12);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+        }
+
+        .portal-card h3 {
+            font-family: var(--font-headline);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .portal-card .portal-sub {
+            color: var(--muted);
+            font-size: 1rem;
+            margin-bottom: 28px;
+        }
+
+        .portal-card ul {
+            list-style: none;
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+
+        .portal-card ul li {
+            padding: 10px 0;
+            color: var(--text);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .portal-card ul li::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            background: var(--cyan);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 9px;
+            box-shadow: 0 0 6px var(--cyan);
+        }
+
+        .portal-link {
+            color: var(--cyan);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .portal-link:hover {
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 120px 0;
+            width: 100%;
+        }
+
+        .steps-grid {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            position: relative;
+            margin-bottom: 64px;
+        }
+
+        .step-card {
+            flex: 1;
+            text-align: center;
+            padding: 0 32px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-num {
+            font-family: var(--font-mono);
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: rgba(0, 212, 255, 0.1);
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .step-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 20px;
+        }
+
+        .step-card h3 {
+            font-family: var(--font-headline);
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .step-card p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* Connector lines */
+        .step-connector {
+            position: absolute;
+            top: 120px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 1;
+        }
+
+        .step-connector-line {
+            position: absolute;
+            top: 0;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .step-connector-line:first-child {
+            left: 20%;
+            width: 27%;
+        }
+
+        .step-connector-line:last-child {
+            left: 53%;
+            width: 27%;
+        }
+
+        .connector-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+            top: -3px;
+            box-shadow: 0 0 12px var(--cyan);
+            animation: travel-dot 3s linear infinite;
+        }
+
+        .step-connector-line:first-child .connector-dot {
+            animation: travel-dot-1 3s linear infinite;
+        }
+
+        .step-connector-line:last-child .connector-dot {
+            animation: travel-dot-2 3s linear infinite;
+        }
+
+        @keyframes travel-dot-1 {
+            0% {
+                left: 0;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes travel-dot-2 {
+            0% {
+                left: 0;
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        .how-tagline {
+            text-align: center;
+            font-style: italic;
+            color: var(--muted);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== STATS STRIP ===== */
+        .stats-strip {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 80px 0;
+            width: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-family: var(--font-mono);
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--cyan);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .stat-item .stat-label {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* ===== FOOTER CTA ===== */
+        .footer-cta {
+            padding: 140px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .footer-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .footer-cta h2 {
+            font-family: var(--font-headline);
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-cta .cta-sub {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+
+        .footer-cta .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* ===== FOOTER BAR ===== */
+        .footer-bar {
+            border-top: 1px solid var(--border);
+            padding: 32px 0;
+            width: 100%;
+        }
+
+        .footer-bar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-bar-left .footer-logo {
+            font-family: var(--font-headline);
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .footer-bar-right {
+            display: flex;
+            gap: 24px;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-bar-right a {
+            transition: color 0.2s;
+        }
+
+        .footer-bar-right a:hover {
+            color: var(--text);
+        }
+
+        .footer-bar-right .sep {
+            opacity: 0.4;
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-inner {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .hero-left,
+            .hero-right {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+
+            .hero-right {
+                margin-top: 40px;
+                height: 400px;
+            }
+
+            .map-container {
+                height: 100%;
+            }
+
+            .portals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portal-card {
+                min-height: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+
+            .steps-grid {
+                flex-direction: column;
+                gap: 48px;
+            }
+
+            .step-connector {
+                display: none;
+            }
+
+            .navbar {
+                padding: 0 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+            }
+
+            .hero-trust {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .section-label h2 {
+                font-size: 1.75rem;
+            }
+
+            .footer-cta h2 {
+                font-size: 2rem;
+            }
+
+            .footer-cta .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-bar-inner {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-item .stat-number {
+                font-size: 2.4rem;
+            }
+
+            .portals {
+                padding: 80px 0;
+            }
+
+            .how-it-works {
+                padding: 80px 0;
+            }
+
+            .portal-card {
+                padding: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP CYAN LINE -->
+    <div class="top-line"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a7.4 7.4 0 0 1 0 20M12 2a7.4 7.4 0 0 0 0 20"></path>
+                <path d="M12 2v20"></path>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                <line x1="19.07" y1="4.93" x2="4.93" y2="19.07"></line>
+            </svg>
+            CRYOCORE
+        </div>
+        <button class="btn-login" id="loginBtn">Login to CryoCore</button>
+    </nav>
+
+    <!-- LOGIN POPUP -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-popup">
+            <button class="login-popup-close" id="loginClose">✕</button>
+            <h3>Login to CryoCore</h3>
+            <button class="btn-portal">Enter Client Portal</button>
+            <div class="login-divider"><span>or</span></div>
+            <a href="#" class="login-ops-link">Internal OPS Team? Login here →</a>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <div class="container hero-inner">
+            <div class="hero-left">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    Live Platform — 140+ Carriers Active
+                </div>
+                <h1>Intelligent Cold&#8209;Chain<br />Logistics. <span>Built for Pharma.</span></h1>
+                <p class="hero-sub">CryoCore unifies raw material procurement, multimodal route intelligence, live
+                    temperature monitoring, and compliance validation into one secure multitenant platform.</p>
+                <div class="hero-ctas">
+                    <button class="btn-primary">Enter OPS Dashboard</button>
+                    <button class="btn-outline">Access Client Portal</button>
+                </div>
+                <div class="hero-trust">
+                    <span><span class="check">✓</span> GDP Certified</span>
+                    <span><span class="check">✓</span> SOC 2 Compliant</span>
+                    <span><span class="check">✓</span> 99.9% Uptime</span>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="map-container">
+                    <canvas id="worldMap"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DUAL PORTAL SECTION -->
+    <section class="portals" id="portals">
+        <div class="container">
+            <div class="section-label reveal">
+                <h2>One Platform. Two Powerful Portals.</h2>
+                <p>Whether you operate the supply chain or depend on it, CryoCore gives you exactly what you need.</p>
+            </div>
+            <div class="portals-grid">
+                <div class="portal-card ops reveal">
+                    <div class="portal-icon">🔴</div>
+                    <h3>OPS Control Tower</h3>
+                    <p class="portal-sub">For Mysha's Internal Operations Team</p>
+                    <ul>
+                        <li>Global shipment map &amp; live tracking</li>
+                        <li>Real-time temperature telemetry</li>
+                        <li>Predictive risk alerts &amp; excursion detection</li>
+                        <li>Route planning — Air, Sea, Rail, Road</li>
+                        <li>Raw material inventory management</li>
+                    </ul>
+                    <a href="#" class="portal-link">Login as OPS Team →</a>
+                </div>
+                <div class="portal-card client reveal">
+                    <div class="portal-icon">🏢</div>
+                    <h3>Client Tenant Portal</h3>
+                    <p class="portal-sub">For Pharmaceutical Client Organizations</p>
+                    <ul>
+                        <li>Request certified raw materials</li>
+                        <li>Initiate &amp; track shipment orders</li>
+                        <li>Live temperature logs per shipment</li>
+                        <li>Download compliance certificates</li>
+                        <li>Real-time alerts &amp; ETA updates</li>
+                    </ul>
+                    <a href="#" class="portal-link">Login as Client →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section class="how-it-works" id="howItWorks">
+        <div class="container">
+            <div class="section-label reveal">
+                <h2>How CryoCore Works</h2>
+                <p>Three steps. Total cold-chain control.</p>
+            </div>
+            <div class="steps-grid reveal">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <div class="step-icon">📦</div>
+                    <h3>Request</h3>
+                    <p>Client submits material order with temperature specifications, quantity, destination and delivery
+                        deadline.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <div class="step-icon">⚙️</div>
+                    <h3>Orchestrate</h3>
+                    <p>CryoCore evaluates inventory, compares Air, Sea, Rail and Road routes, assigns optimal carrier
+                        and
+                        scores risk.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <div class="step-icon">✅</div>
+                    <h3>Deliver</h3>
+                    <p>Both OPS and Client track the shipment live — temperature, location, ETA and compliance — until
+                        safe delivery.</p>
+                </div>
+                <!-- Connector lines -->
+                <div class="step-connector">
+                    <div class="step-connector-line" style="left:16.66%;width:16.66%">
+                        <div class="connector-dot"></div>
+                    </div>
+                    <div class="step-connector-line" style="left:50%;width:16.66%">
+                        <div class="connector-dot"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="how-tagline reveal">"From first request to final delivery — CryoCore orchestrates every decision,
+                every degree, every mile."</p>
+        </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="stats-strip" id="statsStrip">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <div class="stat-number" data-target="99.1" data-suffix="%">0%</div>
+                    <div class="stat-label">Temp Compliance Rate</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-number" data-target="140" data-suffix="+">0+</div>
+                    <div class="stat-label">Certified Carrier Partners</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-number" data-target="3" data-suffix="">0</div>
+                    <div class="stat-label">Cold Zone Standards</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-number" data-target="60" data-suffix="+">0+</div>
+                    <div class="stat-label">Countries Served</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <section class="footer-cta" id="footerCta">
+        <div class="container">
+            <h2 class="reveal">Take Control of Every Degree.</h2>
+            <p class="cta-sub reveal">Join the platform trusted by global pharma logistics teams to move what matters —
+                safely, compliantly, on time.</p>
+            <div class="cta-buttons reveal">
+                <button class="btn-primary">Enter OPS Dashboard</button>
+                <button class="btn-outline">Access Client Portal</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER BAR -->
+    <footer class="footer-bar">
+        <div class="container footer-bar-inner">
+            <div class="footer-bar-left">
+                <span class="footer-logo">CRYOCORE</span>
+                <span>© 2025 CryoCore. All rights reserved.</span>
+            </div>
+            <div class="footer-bar-right">
+                <a href="#">Privacy Policy</a>
+                <span class="sep">|</span>
+                <a href="#">Terms</a>
+                <span class="sep">|</span>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* ===== NAVBAR SCROLL EFFECT ===== */
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 80);
+        });
+
+        /* ===== LOGIN POPUP ===== */
+        const loginBtn = document.getElementById('loginBtn');
+        const loginOverlay = document.getElementById('loginOverlay');
+        const loginClose = document.getElementById('loginClose');
+        loginBtn.addEventListener('click', () => loginOverlay.classList.add('active'));
+        loginClose.addEventListener('click', () => loginOverlay.classList.remove('active'));
+        loginOverlay.addEventListener('click', (e) => {
+            if (e.target === loginOverlay) loginOverlay.classList.remove('active');
+        });
+
+        /* ===== SCROLL REVEAL ===== */
+        const revealEls = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => revealObserver.observe(el));
+
+        /* ===== COUNT-UP ANIMATION ===== */
+        const statNumbers = document.querySelectorAll('.stat-number');
+        let statsCounted = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsCounted) {
+                    statsCounted = true;
+                    statNumbers.forEach(el => {
+                        const target = parseFloat(el.dataset.target);
+                        const suffix = el.dataset.suffix;
+                        const isDecimal = target % 1 !== 0;
+                        const duration = 2000;
+                        const startTime = performance.now();
+
+                        function animateCount(currentTime) {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            const current = eased * target;
+
+                            if (isDecimal) {
+                                el.textContent = current.toFixed(1) + suffix;
+                            } else {
+                                el.textContent = Math.floor(current) + suffix;
+                            }
+
+                            if (progress < 1) {
+                                requestAnimationFrame(animateCount);
+                            }
+                        }
+                        requestAnimationFrame(animateCount);
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        statsObserver.observe(document.getElementById('statsStrip'));
+
+        /* ===== WORLD MAP (CANVAS) ===== */
+        const canvas = document.getElementById('worldMap');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+
+        function resizeCanvas() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            W = rect.width;
+            H = rect.height;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // City coordinates (normalized 0-1 based on Mercator-like projection)
+        const cities = [
+            { name: 'Mumbai', x: 0.598, y: 0.56, label: null },
+            { name: 'Frankfurt', x: 0.476, y: 0.28, label: null },
+            { name: 'Singapore', x: 0.680, y: 0.60, label: null },
+            { name: 'New York', x: 0.245, y: 0.33, label: { id: 'SHP-2841', temp: '4.2°C', status: '✓', color: '#00ff9d' } },
+            { name: 'Chicago', x: 0.215, y: 0.30, label: null },
+            { name: 'London', x: 0.450, y: 0.25, label: { id: 'SHP-2839', temp: '-17.8°C', status: '⚠', color: '#ffb830' } },
+            { name: 'Tokyo', x: 0.815, y: 0.35, label: null },
+            { name: 'Sydney', x: 0.840, y: 0.76, label: { id: 'SHP-2835', temp: '-68.9°C', status: '✓', color: '#00ff9d' } },
+            { name: 'Paris', x: 0.462, y: 0.27, label: null },
+            { name: 'Lagos', x: 0.445, y: 0.55, label: null },
+        ];
+
+        // Flight paths (index pairs)
+        const routes = [
+            [3, 5],  // NY -> London
+            [5, 1],  // London -> Frankfurt
+            [1, 0],  // Frankfurt -> Mumbai
+            [0, 2],  // Mumbai -> Singapore
+            [2, 6],  // Singapore -> Tokyo
+            [6, 7],  // Tokyo -> Sydney
+            [3, 4],  // NY -> Chicago
+            [5, 9],  // London -> Lagos
+            [1, 8],  // Frankfurt -> Paris
+        ];
+
+        // Simplified world continent outlines (very abstract polygon shapes normalized 0-1)
+        const continents = [
+            // North America
+            { points: [[0.08, 0.15], [0.12, 0.12], [0.20, 0.10], [0.28, 0.14], [0.30, 0.18], [0.28, 0.25], [0.30, 0.30], [0.28, 0.38], [0.24, 0.42], [0.20, 0.45], [0.17, 0.50], [0.15, 0.52], [0.18, 0.55], [0.20, 0.53], [0.22, 0.56], [0.18, 0.58], [0.14, 0.55], [0.12, 0.50], [0.10, 0.42], [0.06, 0.35], [0.04, 0.28], [0.06, 0.20]] },
+            // South America
+            { points: [[0.22, 0.58], [0.26, 0.56], [0.30, 0.58], [0.32, 0.62], [0.33, 0.68], [0.32, 0.74], [0.30, 0.80], [0.28, 0.85], [0.25, 0.88], [0.22, 0.85], [0.20, 0.78], [0.19, 0.72], [0.20, 0.65]] },
+            // Europe
+            { points: [[0.42, 0.12], [0.48, 0.10], [0.52, 0.12], [0.54, 0.16], [0.52, 0.20], [0.50, 0.24], [0.48, 0.28], [0.46, 0.32], [0.44, 0.28], [0.42, 0.24], [0.40, 0.20], [0.41, 0.16]] },
+            // Africa
+            { points: [[0.42, 0.38], [0.46, 0.36], [0.50, 0.38], [0.54, 0.42], [0.56, 0.48], [0.55, 0.55], [0.54, 0.62], [0.52, 0.68], [0.50, 0.74], [0.48, 0.76], [0.46, 0.74], [0.44, 0.68], [0.42, 0.62], [0.40, 0.55], [0.38, 0.48], [0.40, 0.42]] },
+            // Asia
+            { points: [[0.54, 0.10], [0.60, 0.08], [0.68, 0.10], [0.76, 0.14], [0.82, 0.18], [0.84, 0.24], [0.82, 0.30], [0.78, 0.35], [0.74, 0.38], [0.70, 0.42], [0.66, 0.45], [0.62, 0.48], [0.58, 0.50], [0.56, 0.45], [0.54, 0.40], [0.52, 0.34], [0.50, 0.28], [0.48, 0.22], [0.50, 0.16]] },
+            // Southeast Asia / Indonesia  
+            { points: [[0.66, 0.52], [0.70, 0.50], [0.74, 0.52], [0.78, 0.54], [0.80, 0.58], [0.78, 0.60], [0.74, 0.58], [0.70, 0.56], [0.68, 0.55]] },
+            // Australia
+            { points: [[0.78, 0.68], [0.82, 0.65], [0.88, 0.66], [0.92, 0.68], [0.92, 0.74], [0.90, 0.80], [0.86, 0.82], [0.82, 0.80], [0.78, 0.76], [0.76, 0.72]] },
+        ];
+
+        let animTime = 0;
+
+        function drawCurvedPath(x1, y1, x2, y2) {
+            const midX = (x1 + x2) / 2;
+            const midY = (y1 + y2) / 2 - Math.abs(x2 - x1) * 0.15;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.quadraticCurveTo(midX, midY, x2, y2);
+            return { midX, midY };
+        }
+
+        function getPointOnCurve(x1, y1, x2, y2, t) {
+            const midX = (x1 + x2) / 2;
+            const midY = (y1 + y2) / 2 - Math.abs(x2 - x1) * 0.15;
+            const ix1 = (1 - t) * x1 + t * midX;
+            const iy1 = (1 - t) * y1 + t * midY;
+            const ix2 = (1 - t) * midX + t * x2;
+            const iy2 = (1 - t) * midY + t * y2;
+            return {
+                x: (1 - t) * ix1 + t * ix2,
+                y: (1 - t) * iy1 + t * iy2,
+            };
+        }
+
+        function draw() {
+            animTime += 0.004;
+            ctx.clearRect(0, 0, W, H);
+
+            // Subtle radial glow
+            const grd = ctx.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, W * 0.55);
+            grd.addColorStop(0, 'rgba(0, 212, 255, 0.03)');
+            grd.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, W, H);
+
+            // Draw continents
+            continents.forEach(cont => {
+                ctx.beginPath();
+                cont.points.forEach((p, i) => {
+                    const px = p[0] * W;
+                    const py = p[1] * H;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                });
+                ctx.closePath();
+                ctx.fillStyle = '#0a1628';
+                ctx.fill();
+                ctx.strokeStyle = '#1a2d4a';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            // Draw flight paths
+            routes.forEach((route, idx) => {
+                const c1 = cities[route[0]];
+                const c2 = cities[route[1]];
+                const x1 = c1.x * W, y1 = c1.y * H;
+                const x2 = c2.x * W, y2 = c2.y * H;
+
+                // Static path line
+                drawCurvedPath(x1, y1, x2, y2);
+                ctx.strokeStyle = 'rgba(0, 212, 255, 0.12)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Animated traveling dot
+                const t = ((animTime * (0.8 + idx * 0.1)) % 1);
+                const pt = getPointOnCurve(x1, y1, x2, y2, t);
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.8)';
+                ctx.fill();
+
+                // Trailing glow on traveling dot
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 6, 0, Math.PI * 2);
+                const tGrd = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 6);
+                tGrd.addColorStop(0, 'rgba(0, 212, 255, 0.3)');
+                tGrd.addColorStop(1, 'transparent');
+                ctx.fillStyle = tGrd;
+                ctx.fill();
+            });
+
+            // Draw city dots
+            cities.forEach((city, i) => {
+                const cx = city.x * W;
+                const cy = city.y * H;
+                const pulseScale = 1 + 0.3 * Math.sin(animTime * 3 + i * 0.7);
+
+                // Outer glow
+                ctx.beginPath();
+                ctx.arc(cx, cy, 10 * pulseScale, 0, Math.PI * 2);
+                const glowGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 10 * pulseScale);
+                glowGrd.addColorStop(0, 'rgba(0, 212, 255, 0.2)');
+                glowGrd.addColorStop(1, 'transparent');
+                ctx.fillStyle = glowGrd;
+                ctx.fill();
+
+                // Core dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#00d4ff';
+                ctx.fill();
+
+                // Inner bright center
+                ctx.beginPath();
+                ctx.arc(cx, cy, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+            });
+
+            // Draw floating label cards
+            cities.forEach((city) => {
+                if (!city.label) return;
+                const cx = city.x * W;
+                const cy = city.y * H;
+                const cardW = 140;
+                const cardH = 30;
+                // Position card to the left if it would clip the right edge
+                const wouldClipRight = (cx + 12 + cardW) > W;
+                const cardX = wouldClipRight ? cx - cardW - 12 : cx + 12;
+                const cardY = cy - cardH - 10;
+                const bobY = Math.sin(animTime * 2 + cx * 0.01) * 3;
+
+                // Card background
+                ctx.fillStyle = 'rgba(10, 22, 40, 0.92)';
+                ctx.strokeStyle = city.label.color === '#ffb830' ? 'rgba(255, 184, 48, 0.5)' : 'rgba(0, 255, 157, 0.5)';
+                ctx.lineWidth = 1;
+                roundRect(ctx, cardX, cardY + bobY, cardW, cardH, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                // Card text
+                ctx.font = '10px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#e8f4ff';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(city.label.id + ' | ', cardX + 10, cardY + bobY + cardH / 2);
+
+                const idWidth = ctx.measureText(city.label.id + ' | ').width;
+                ctx.fillStyle = city.label.color;
+                ctx.fillText(city.label.temp + ' ' + city.label.status, cardX + 10 + idWidth, cardY + bobY + cardH / 2);
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        function roundRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
+
+        requestAnimationFrame(draw);
+    </script>
+</body>
+
+</html>
