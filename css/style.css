@@ -41,6 +41,7 @@ html {
 
 body {
     background: var(--bg-gradient);
+    background-attachment: fixed;
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
@@ -106,10 +107,10 @@ img {
     align-items: center;
 }
 
-.nav-logo img,
-.nav-logo canvas {
+.nav-logo img {
     height: 40px;
     width: auto;
+    background: transparent;
 }
 
 .btn-login-ops {
@@ -703,10 +704,10 @@ section {
     font-size: 0.85rem;
 }
 
-.footer-bar-left img,
-.footer-bar-left canvas {
+.footer-bar-left img {
     height: 32px;
     width: auto;
+    background: transparent;
 }
 
 .footer-bar-right {
