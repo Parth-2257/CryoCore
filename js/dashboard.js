@@ -5,18 +5,18 @@
 // ===== DUMMY DATA =====
 
 const ORDERS = [
-    { id: 'ORD-101', product: 'Vaccine X', qty: 500, tempRange: '2°C – 8°C', destination: 'Mumbai', status: 'Processing', created: '2026-03-01' },
-    { id: 'ORD-102', product: 'Insulin Batch A', qty: 1200, tempRange: '2°C – 8°C', destination: 'Delhi', status: 'Shipped', created: '2026-02-28' },
-    { id: 'ORD-103', product: 'Biologic B12', qty: 300, tempRange: '-20°C – -15°C', destination: 'Bangalore', status: 'Delivered', created: '2026-02-25' },
-    { id: 'ORD-104', product: 'Vaccine X', qty: 750, tempRange: '2°C – 8°C', destination: 'Hyderabad', status: 'Shipped', created: '2026-02-22' },
-    { id: 'ORD-105', product: 'Monoclonal Ab', qty: 200, tempRange: '-70°C – -60°C', destination: 'Mumbai', status: 'Processing', created: '2026-02-20' },
-    { id: 'ORD-106', product: 'Insulin Batch A', qty: 800, tempRange: '2°C – 8°C', destination: 'Delhi', status: 'Delivered', created: '2026-02-18' },
-    { id: 'ORD-107', product: 'Biologic B12', qty: 450, tempRange: '-20°C – -15°C', destination: 'Bangalore', status: 'Shipped', created: '2026-02-15' },
-    { id: 'ORD-108', product: 'Vaccine X', qty: 600, tempRange: '2°C – 8°C', destination: 'Hyderabad', status: 'Processing', created: '2026-02-12' },
-    { id: 'ORD-109', product: 'Plasma Derivatives', qty: 350, tempRange: '-30°C – -20°C', destination: 'Mumbai', status: 'Delivered', created: '2026-02-10' },
-    { id: 'ORD-110', product: 'Insulin Batch A', qty: 900, tempRange: '2°C – 8°C', destination: 'Delhi', status: 'Shipped', created: '2026-02-08' },
-    { id: 'ORD-111', product: 'Gene Therapy Vector', qty: 100, tempRange: '-80°C – -60°C', destination: 'Bangalore', status: 'Processing', created: '2026-02-05' },
-    { id: 'ORD-112', product: 'Vaccine X', qty: 1500, tempRange: '2°C – 8°C', destination: 'Hyderabad', status: 'Delivered', created: '2026-02-01' },
+    { id: 'ORD-20250308-001', product: 'Vaccine X', qty: 500, tempRange: '2°C – 8°C', tempStatus: 'Normal', destination: 'Mumbai', status: 'Processing', created: '2026-03-08' },
+    { id: 'ORD-20250307-002', product: 'Insulin Batch A', qty: 1200, tempRange: '2°C – 8°C', tempStatus: 'Normal', destination: 'Delhi', status: 'In Transit', created: '2026-03-07' },
+    { id: 'ORD-20250306-003', product: 'Biologic B12', qty: 300, tempRange: '-20°C – -15°C', tempStatus: 'Normal', destination: 'Bangalore', status: 'Delivered', created: '2026-03-06' },
+    { id: 'ORD-20250305-004', product: 'Vaccine X', qty: 750, tempRange: '2°C – 8°C', tempStatus: 'Warning', destination: 'Hyderabad', status: 'In Transit', created: '2026-03-05' },
+    { id: 'ORD-20250304-005', product: 'Monoclonal Ab', qty: 200, tempRange: '-70°C – -60°C', tempStatus: 'Excursion', destination: 'Mumbai', status: 'Processing', created: '2026-03-04' },
+    { id: 'ORD-20250303-006', product: 'Insulin Batch A', qty: 800, tempRange: '2°C – 8°C', tempStatus: 'Normal', destination: 'Delhi', status: 'Delivered', created: '2026-03-03' },
+    { id: 'ORD-20250302-007', product: 'Biologic B12', qty: 450, tempRange: '-20°C – -15°C', tempStatus: 'Normal', destination: 'Bangalore', status: 'In Transit', created: '2026-03-02' },
+    { id: 'ORD-20250301-008', product: 'Vaccine X', qty: 600, tempRange: '2°C – 8°C', tempStatus: 'Normal', destination: 'Hyderabad', status: 'Processing', created: '2026-03-01' },
+    { id: 'ORD-20250228-009', product: 'Plasma Derivatives', qty: 350, tempRange: '-30°C – -20°C', tempStatus: 'Normal', destination: 'Mumbai', status: 'Delivered', created: '2026-02-28' },
+    { id: 'ORD-20250227-010', product: 'Insulin Batch A', qty: 900, tempRange: '2°C – 8°C', tempStatus: 'Warning', destination: 'Delhi', status: 'In Transit', created: '2026-02-27' },
+    { id: 'ORD-20250226-011', product: 'Gene Therapy Vector', qty: 100, tempRange: '-80°C – -60°C', tempStatus: 'Normal', destination: 'Bangalore', status: 'Processing', created: '2026-02-26' },
+    { id: 'ORD-20250225-012', product: 'Vaccine X', qty: 1500, tempRange: '2°C – 8°C', tempStatus: 'Normal', destination: 'Hyderabad', status: 'Delivered', created: '2026-02-25' },
 ];
 
 const SHIPMENTS = [
@@ -58,6 +58,53 @@ const notifList = document.getElementById('notifList');
 const notifBadge = document.getElementById('notifBadge');
 const notifClear = document.getElementById('notifClear');
 const btnCreateOrder = document.getElementById('btnCreateOrder');
+const darkModeToggle = document.getElementById('darkModeToggle');
+const userAvatar = document.getElementById('userAvatar');
+const profileDropdown = document.getElementById('profileDropdown');
+const logoutBtn = document.getElementById('logoutBtn');
+const orderModalOverlay = document.getElementById('orderModalOverlay');
+const modalClose = document.getElementById('modalClose');
+const sortSelect = document.getElementById('sortSelect');
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+// Sorting state
+let sortState = {
+    column: 'id',
+    direction: 'desc'
+};
+
+// Tab state
+let currentTab = 'active';
+
+// ===== DARK MODE TOGGLE =====
+function initDarkMode() {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true' || (!savedMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+        updateDarkModeIcon(true);
+    } else {
+        updateDarkModeIcon(false);
+    }
+}
+
+function updateDarkModeIcon(isDark) {
+    const sunIcon = darkModeToggle.querySelector('.sun-icon');
+    const moonIcon = darkModeToggle.querySelector('.moon-icon');
+    if (isDark) {
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
+}
+
+darkModeToggle.addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeIcon(isDark);
+});
 
 // ===== SIDEBAR TOGGLE (MOBILE) =====
 let overlay = document.createElement('div');
@@ -73,6 +120,69 @@ overlay.addEventListener('click', () => {
     sidebar.classList.remove('open');
     overlay.classList.remove('active');
 });
+
+// ===== PROFILE DROPDOWN =====
+userAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('open');
+});
+
+document.addEventListener('click', (e) => {
+    if (!profileDropdown.contains(e.target) && !userAvatar.contains(e.target)) {
+        profileDropdown.classList.remove('open');
+    }
+});
+
+logoutBtn.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'index.html';
+});
+
+// ===== TAB FUNCTIONALITY =====
+function switchTab(tabName) {
+    currentTab = tabName;
+    tabButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
+    tabContents.forEach(content => {
+        content.classList.toggle('active', content.id === tabName + 'Tab');
+    });
+    renderOrders();
+}
+
+tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        switchTab(button.dataset.tab);
+    });
+});
+
+// ===== SORT FUNCTIONALITY =====
+sortSelect.addEventListener('change', (e) => {
+    const value = e.target.value;
+    const [column, direction] = value.split('-');
+    sortState.column = column;
+    sortState.direction = direction;
+    renderOrders();
+});
+
+// Add click handlers for sortable headers
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('sortable')) {
+        const column = e.target.dataset.column;
+        if (sortState.column === column) {
+            sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortState.column = column;
+            sortState.direction = 'asc';
+        }
+        updateSortSelect();
+        renderOrders();
+    }
+});
+
+function updateSortSelect() {
+    sortSelect.value = `${sortState.column}-${sortState.direction}`;
+}
 
 // ===== PAGE NAVIGATION =====
 function navigateTo(pageName) {
@@ -105,6 +215,48 @@ navLinks.forEach(link => {
 if (btnCreateOrder) {
     btnCreateOrder.addEventListener('click', () => navigateTo('create-order'));
 }
+
+// ===== ORDER MODAL =====
+function showOrderModal(order) {
+    const modal = document.getElementById('orderModalOverlay');
+    const stage = getProgressStage(order.status);
+    
+    // Update progress pipeline
+    document.querySelectorAll('.progress-step').forEach(step => {
+        step.classList.remove('completed', 'active');
+        if (step.dataset.stage === stage) {
+            step.classList.add('active');
+        } else {
+            const stageOrder = ['ordered', 'sourcing', 'in-transit', 'distribution', 'delivered'];
+            const currentIndex = stageOrder.indexOf(stage);
+            const stepIndex = stageOrder.indexOf(step.dataset.stage);
+            if (stepIndex < currentIndex) {
+                step.classList.add('completed');
+            }
+        }
+    });
+    
+    // Update details
+    document.getElementById('detailProduct').textContent = order.product;
+    document.getElementById('detailTempRange').textContent = order.tempRange;
+    document.getElementById('detailTransport').textContent = `${getTransportIcon('Air')} Air`;
+    document.getElementById('detailLocation').textContent = 'En route — Current Location';
+    document.getElementById('detailDelivery').textContent = formatDate(order.created);
+    document.getElementById('detailCreated').textContent = formatDate(order.created);
+    document.getElementById('detailStatus').textContent = statusBadge(order.status);
+    
+    modal.classList.add('open');
+}
+
+modalClose.addEventListener('click', () => {
+    document.getElementById('orderModalOverlay').classList.remove('open');
+});
+
+orderModalOverlay.addEventListener('click', (e) => {
+    if (e.target === orderModalOverlay) {
+        orderModalOverlay.classList.remove('open');
+    }
+});
 
 // ===== NOTIFICATIONS =====
 function renderNotifications() {
@@ -159,14 +311,131 @@ function statusBadge(status) {
     return `<span class="badge ${cls}">${status}</span>`;
 }
 
-function tempBadge(status) {
-    const cls = status.toLowerCase();
-    return `<span class="temp-badge ${cls}">${status}</span>`;
+function tempStatusBadge(status) {
+    const statusMap = {
+        'Normal': { class: 'normal', icon: '✅', text: 'Normal' },
+        'Warning': { class: 'warning', icon: '⚠️', text: 'Warning' },
+        'Excursion': { class: 'critical', icon: '🚨', text: 'Excursion' }
+    };
+    
+    const statusInfo = statusMap[status] || statusMap['Normal'];
+    return `<span class="temp-badge ${statusInfo.class}">${statusInfo.icon} ${statusInfo.text}</span>`;
 }
 
 function formatDate(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function getTransportIcon(mode) {
+    const icons = {
+        'Air': '✈️',
+        'Sea': '🚢',
+        'Rail': '🚂',
+        'Road': '🚛'
+    };
+    return icons[mode] || '🚛';
+}
+
+function getRiskScore(status, tempStatus) {
+    if (tempStatus === 'Excursion') return 'High';
+    if (tempStatus === 'Warning') return 'Medium';
+    if (status === 'Delayed') return 'High';
+    return 'Low';
+}
+
+function getProgressStage(status) {
+    const stageMap = {
+        'Processing': 'ordered',
+        'Preparing': 'sourcing',
+        'In Transit': 'in-transit',
+        'Delivered': 'delivered'
+    };
+    return stageMap[status] || 'ordered';
+}
+
+function sortOrders(orders) {
+    const sorted = [...orders];
+    sorted.sort((a, b) => {
+        let aVal = a[sortState.column];
+        let bVal = b[sortState.column];
+        
+        // Handle different data types
+        if (sortState.column === 'id') {
+            aVal = aVal.split('-').join('');
+            bVal = bVal.split('-').join('');
+        }
+        
+        if (sortState.column === 'status') {
+            const statusOrder = { 'Processing': 1, 'In Transit': 2, 'Delivered': 3 };
+            aVal = statusOrder[a.status] || 0;
+            bVal = statusOrder[b.status] || 0;
+        }
+        
+        if (sortState.direction === 'asc') {
+            return aVal > bVal ? 1 : -1;
+        } else {
+            return aVal < bVal ? 1 : -1;
+        }
+    });
+    return sorted;
+}
+
+function renderOrders() {
+    const activeOrders = ORDERS.filter(o => 
+        o.status === 'Processing' || o.status === 'In Transit' || o.status === 'Preparing'
+    );
+    const historyOrders = ORDERS.filter(o => 
+        o.status === 'Delivered' || o.status === 'Cancelled' || o.status === 'Completed'
+    );
+    
+    const sortedActive = sortOrders(activeOrders);
+    const sortedHistory = sortOrders(historyOrders);
+    
+    // Render active orders
+    const activeBody = document.getElementById('activeOrdersBody');
+    activeBody.innerHTML = '';
+    sortedActive.forEach(o => {
+        activeBody.innerHTML += `<tr data-order-id="${o.id}">
+            <td style="font-family: var(--font-mono); font-weight:600; color: var(--text-primary);">${o.id}</td>
+            <td>${o.product}</td>
+            <td style="font-family: var(--font-mono);">${o.qty}</td>
+            <td>${tempStatusBadge(o.tempStatus)}</td>
+            <td>${o.destination}</td>
+            <td>${statusBadge(o.status)}</td>
+        </tr>`;
+    });
+    
+    // Render history orders
+    const historyBody = document.getElementById('historyOrdersBody');
+    historyBody.innerHTML = '';
+    sortedHistory.forEach(o => {
+        historyBody.innerHTML += `<tr data-order-id="${o.id}">
+            <td style="font-family: var(--font-mono); font-weight:600; color: var(--text-primary);">${o.id}</td>
+            <td>${o.product}</td>
+            <td style="font-family: var(--font-mono);">${o.qty}</td>
+            <td>${tempStatusBadge(o.tempStatus)}</td>
+            <td>${o.destination}</td>
+            <td>${statusBadge(o.status)}</td>
+        </tr>`;
+    });
+    
+    // Add click handlers for order details
+    document.querySelectorAll('#activeOrdersBody tr, #historyOrdersBody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            const orderId = row.dataset.orderId;
+            const order = ORDERS.find(o => o.id === orderId);
+            if (order) showOrderModal(order);
+        });
+    });
+    
+    // Update sortable header classes
+    document.querySelectorAll('.sortable').forEach(th => {
+        th.classList.remove('asc', 'desc');
+        if (th.dataset.column === sortState.column) {
+            th.classList.add(sortState.direction);
+        }
+    });
 }
 
 function renderRecentOrders() {
@@ -518,11 +787,9 @@ btnNewOrder.addEventListener('click', () => {
 
 // ===== INITIALIZE =====
 function init() {
+    initDarkMode();
     renderNotifications();
-    renderRecentOrders();
-    renderOrdersTable();
-    renderShipmentsTable();
-    renderShipmentHistory();
+    renderOrders();
     initDashboardCharts();
 }
 

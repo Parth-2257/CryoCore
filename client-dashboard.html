@@ -31,6 +31,25 @@
             </a>
         </div>
         <div class="dash-navbar-right">
+            <!-- Dark Mode Toggle -->
+            <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 12 3a9 9 0 0 1 1 9 9.79c0 .5-.03.85-.25.85-.56 0-.29-.03-.56.25-.56.56 0 .3.04.56.25.56.56A9 9 0 0 1 1 21 12.79z"></path>
+                </svg>
+            </button>
             <!-- Notification Bell -->
             <div class="notif-wrapper" id="notifWrapper">
                 <button class="notif-btn" id="notifBtn" aria-label="Notifications">
@@ -55,13 +74,57 @@
             <!-- User Avatar -->
             <div class="user-avatar" id="userAvatar">
                 <div class="avatar-circle">
-                    <span>PN</span>
+                    <span>SM</span>
                 </div>
-                <span class="avatar-name">Parth Nayak</span>
+                <span class="avatar-name">Dr. Sarah Mitchell</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-header">
+                        <div class="profile-info">
+                            <div class="profile-name">Dr. Sarah Mitchell</div>
+                            <div class="profile-org">BioGen Pharma Ltd.</div>
+                            <div class="profile-role">Procurement Manager</div>
+                        </div>
+                    </div>
+                    <div class="profile-dropdown-actions">
+                        <button class="profile-action-btn" id="profileBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            My Profile
+                        </button>
+                        <button class="profile-action-btn" id="settingsBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m4.22-13.22 4.22 4.22"></path>
+                                <path d="M20.78 8.22 4.22 4.22"></path>
+                            </svg>
+                            Settings
+                        </button>
+                        <button class="profile-action-btn" id="helpBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 0 5.83 5.83 3 3 0 0 1 0-5.83-5.83"></path>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                            </svg>
+                            Help & Support
+                        </button>
+                        <div style="height: 1px; background: var(--border-color); margin: 8px 0;"></div>
+                        <button class="profile-action-btn" id="logoutBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -95,14 +158,6 @@
                     <line x1="8" y1="12" x2="16" y2="12"></line>
                 </svg>
                 <span>Create Order</span>
-            </a>
-            <a href="#" class="sidebar-link" data-page="shipments" id="nav-shipments">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="1" y="6" width="22" height="12" rx="2" ry="2"></rect>
-                    <path d="M1 10h22"></path>
-                </svg>
-                <span>Shipments</span>
             </a>
             <a href="#" class="sidebar-link" data-page="analytics" id="nav-analytics">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -270,24 +325,73 @@
                     Create Order
                 </button>
             </div>
-            <div class="table-card">
-                <div class="table-responsive">
-                    <table class="dash-table" id="ordersTable">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Temperature Range</th>
-                                <th>Destination</th>
-                                <th>Status</th>
-                                <th>Created Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ordersBody">
-                            <!-- Filled by JS -->
-                        </tbody>
-                    </table>
+
+            <!-- Sort Dropdown -->
+            <div class="sort-container">
+                <label for="sortSelect">Sort by:</label>
+                <select id="sortSelect" class="sort-select">
+                    <option value="id-desc">Order ID (Newest First)</option>
+                    <option value="id-asc">Order ID (Oldest First)</option>
+                    <option value="destination-asc">Destination (A-Z)</option>
+                    <option value="destination-desc">Destination (Z-A)</option>
+                    <option value="quantity-desc">Quantity (High to Low)</option>
+                    <option value="quantity-asc">Quantity (Low to High)</option>
+                    <option value="status-active">Status (Active First)</option>
+                    <option value="status-completed">Status (Completed First)</option>
+                </select>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button active" data-tab="active">Active Shipments</button>
+                    <button class="tab-button" data-tab="history">Order History</button>
+                </div>
+            </div>
+
+            <!-- Active Shipments Tab -->
+            <div class="tab-content active" id="activeTab">
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table class="dash-table" id="activeOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-column="id">Order ID</th>
+                                    <th>Product</th>
+                                    <th class="sortable" data-column="quantity">Quantity</th>
+                                    <th>Temperature Status</th>
+                                    <th class="sortable" data-column="destination">Destination</th>
+                                    <th class="sortable" data-column="status">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeOrdersBody">
+                                <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order History Tab -->
+            <div class="tab-content" id="historyTab">
+                <div class="table-card">
+                    <div class="table-responsive">
+                        <table class="dash-table" id="historyOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-column="id">Order ID</th>
+                                    <th>Product</th>
+                                    <th class="sortable" data-column="quantity">Quantity</th>
+                                    <th>Temperature Status</th>
+                                    <th class="sortable" data-column="destination">Destination</th>
+                                    <th class="sortable" data-column="status">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyOrdersBody">
+                                <!-- Filled by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -368,60 +472,6 @@
             </div>
         </section>
 
-        <!-- ========== PAGE: SHIPMENTS ========== -->
-        <section class="dash-page" id="page-shipments">
-            <div class="page-header">
-                <div>
-                    <h1>Shipments</h1>
-                    <p class="page-subtitle">Track all active and completed shipments.</p>
-                </div>
-            </div>
-            <div class="table-card">
-                <div class="table-card-header">
-                    <h3>Active Shipments</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="dash-table" id="shipmentsTable">
-                        <thead>
-                            <tr>
-                                <th>Shipment ID</th>
-                                <th>Order ID</th>
-                                <th>Current Location</th>
-                                <th>Temperature Status</th>
-                                <th>ETA</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shipmentsBody">
-                            <!-- Filled by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="table-card" style="margin-top: 32px;">
-                <div class="table-card-header">
-                    <h3>Shipment History</h3>
-                </div>
-                <div class="table-responsive">
-                    <table class="dash-table" id="shipmentHistoryTable">
-                        <thead>
-                            <tr>
-                                <th>Shipment ID</th>
-                                <th>Order ID</th>
-                                <th>Origin</th>
-                                <th>Destination</th>
-                                <th>Delivered On</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="shipmentHistoryBody">
-                            <!-- Filled by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
         <!-- ========== PAGE: ANALYTICS ========== -->
         <section class="dash-page" id="page-analytics">
             <div class="page-header">
@@ -495,6 +545,109 @@
         </section>
 
     </main>
+
+    <!-- ========== ORDER DETAILS MODAL ========== -->
+    <div class="modal-overlay" id="orderModalOverlay">
+        <div class="modal-dialog" id="orderModalDialog">
+            <div class="modal-header">
+                <h3>Order Details</h3>
+                <button class="modal-close" id="modalClose" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Shipment Progress Pipeline -->
+                <div class="progress-section">
+                    <h4>Shipment Progress</h4>
+                    <div class="progress-pipeline" id="progressPipeline">
+                        <div class="progress-step" data-stage="ordered">
+                            <div class="progress-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4"></path>
+                                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+                                </svg>
+                            </div>
+                            <div class="progress-label">Ordered</div>
+                        </div>
+                        <div class="progress-step" data-stage="shipped">
+                            <div class="progress-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="6" width="22" height="12" rx="2" ry="2"></rect>
+                                    <path d="M1 10h22"></path>
+                                </svg>
+                            </div>
+                            <div class="progress-label">Shipped</div>
+                        </div>
+                        <div class="progress-step" data-stage="in-transit">
+                            <div class="progress-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="progress-label">In Transit</div>
+                        </div>
+                        <div class="progress-step" data-stage="distribution">
+                            <div class="progress-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                                </svg>
+                            </div>
+                            <div class="progress-label">Distribution Center</div>
+                        </div>
+                        <div class="progress-step" data-stage="delivered">
+                            <div class="progress-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="progress-label">Delivered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment Details -->
+                <div class="details-section">
+                    <h4>Shipment Details</h4>
+                    <div class="details-grid" id="detailsGrid">
+                        <div class="detail-item">
+                            <label>Product Name</label>
+                            <span id="detailProduct">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Mode of Transport</label>
+                            <span id="detailTransport">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Temperature Range</label>
+                            <span id="detailTempRange">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Current Location</label>
+                            <span id="detailLocation">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Expected Delivery Date</label>
+                            <span id="detailDelivery">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Created Date</label>
+                            <span id="detailCreated">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label>Shipment Status</label>
+                            <span id="detailStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="js/dashboard.js"></script>
 </body>
