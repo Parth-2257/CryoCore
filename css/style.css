@@ -1,5 +1,5 @@
 /* ===== GOOGLE FONTS ===== */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 /* ===== DESIGN TOKENS ===== */
 :root {
@@ -18,9 +18,9 @@
     --success: #00ff9d;
     --warning: #ffb830;
     --danger: #ff4757;
-    --font-headline: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-headline: 'Manrope', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
 }
 
 /* ===== RESET & BASE ===== */
@@ -93,6 +93,7 @@ img {
     justify-content: space-between;
     transition: all 0.3s ease-in-out;
     background: transparent;
+    overflow: visible;
 }
 
 .navbar.scrolled {
@@ -108,8 +109,9 @@ img {
 }
 
 .nav-logo img {
-    height: 80px;
+    height: 160px;
     width: auto;
+    max-width: none;
     background: transparent;
 }
 
@@ -705,8 +707,9 @@ section {
 }
 
 .footer-bar-left img {
-    height: 70px;
+    height: 140px;
     width: auto;
+    max-width: none;
     background: transparent;
 }
 
