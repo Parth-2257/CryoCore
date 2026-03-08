@@ -599,6 +599,365 @@
             border: 2px solid var(--accent-cyan);
         }
 
+        /* ===== DASHBOARD REBUILD STYLES ===== */
+        .dash-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .dash-row:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .dash-row:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .dash-row:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .dash-row:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        .dash-row:nth-child(5) {
+            animation-delay: 0.4s;
+        }
+
+        .dash-row:nth-child(6) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ops-stat-card-new {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .ops-stat-card-new:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .ops-stat-icon-box {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ops-stat-number-large {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .ops-stat-label-new {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .ops-stat-trend {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Map Section Styles */
+        .map-card-container {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            height: 560px;
+            /* Header + Map */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .map-card-header {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card);
+        }
+
+        .map-mini-stats {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .map-mini-stat {
+            text-align: right;
+        }
+
+        .map-mini-stat-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+        }
+
+        .map-mini-stat-val {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .divider-v {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+        }
+
+        .map-legend-bar {
+            padding: 12px 24px;
+            background: rgba(13, 31, 56, 0.4);
+            display: flex;
+            gap: 24px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot-s {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .line-s {
+            width: 16px;
+            height: 2px;
+        }
+
+        /* Floating labels for map */
+        .map-floating-label {
+            position: absolute;
+            background: rgba(13, 31, 56, 0.92);
+            border: 1px solid #1a3050;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            color: #e8f4ff;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+            font-family: 'Space Mono', monospace;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Alert strip */
+        .alert-strip {
+            background: rgba(255, 71, 87, 0.04);
+            border: 1px solid rgba(255, 71, 87, 0.15);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .alert-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Two columns 60/40 */
+        .ops-flex-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .ops-col-60 {
+            flex: 0 0 calc(60% - 12px);
+        }
+
+        .ops-col-40 {
+            flex: 0 0 calc(40% - 12px);
+        }
+
+        .ops-col-50 {
+            flex: 0 0 calc(50% - 12px);
+        }
+
+        /* Analytics Styles */
+        .risk-factor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .risk-factor-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .ai-recommendation-box {
+            background: rgba(0, 212, 255, 0.05);
+            border-left: 3px solid #00d4ff;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Compliance Styles */
+        .compliance-circles {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .comp-circle-wrap {
+            text-align: center;
+            flex: 1;
+        }
+
+        .comp-circle {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 8px;
+        }
+
+        .comp-circle svg {
+            transform: rotate(-90deg);
+        }
+
+        .comp-percent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .comp-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .compliance-bar-row {
+            margin-bottom: 12px;
+        }
+
+        .comp-bar-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 6px;
+        }
+
+        .compliance-certificate-card {
+            background: rgba(0, 255, 157, 0.05);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+
+        /* Carrier Styles */
+        .carrier-highlights {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .carrier-h-card {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Distribution Mini Cards */
+        .dist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .dist-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dist-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
         .ops-btn-outline:hover {
             background: var(--accent-cyan);
             color: var(--bg-primary);
@@ -923,18 +1282,18 @@
     <!-- MAIN CONTENT -->
     <main class="dash-main" id="dashMain">
         <!-- DASHBOARD SECTION -->
-        <section class="dash-page active" id="page-dashboard">
-            <div class="page-header">
-                <div>
-                    <h1>Dashboard</h1>
-                    <p class="page-subtitle">Welcome back, Mysha. Here's your global operations overview.</p>
-                </div>
+        <section class="dash-page active" id="page-dashboard" style="padding: 32px;">
+            <div class="welcome-box" style="margin-bottom: 24px;">
+                <h1 style="font-family: 'Manrope', sans-serif; font-weight: 800; color: #fff; margin-bottom: 4px;">Good
+                    morning, Mysha.</h1>
+                <p style="color: var(--text-muted); font-size: 1rem;">You have 2 critical alerts that need attention.
+                </p>
             </div>
 
-            <!-- STAT CARDS -->
-            <div class="stat-cards">
-                <div class="ops-stat-card">
-                    <div class="ops-stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
+            <!-- ROW 1: STAT CARDS -->
+            <div class="dash-row">
+                <div class="ops-stat-card-new">
+                    <div class="ops-stat-icon-box" style="background: rgba(0,212,255,0.15); color: #00d4ff;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <path
@@ -942,105 +1301,435 @@
                             </path>
                         </svg>
                     </div>
-                    <div class="ops-stat-number" id="totalActiveShipments">7</div>
-                    <div class="ops-stat-label">Total Active Shipments</div>
+                    <div class="ops-stat-number-large" id="stat-active-shipments">8</div>
+                    <div class="ops-stat-label-new">Active Shipments</div>
+                    <div class="ops-stat-trend" style="color: var(--success);">↑ 12% from yesterday</div>
                 </div>
-
-                <div class="ops-stat-card">
-                    <div class="ops-stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
+                <div class="ops-stat-card-new">
+                    <div class="ops-stat-icon-box" style="background: rgba(255,71,87,0.15); color: #ff4757;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <path d="M1 3h15v13H1z"></path>
-                            <path d="M16 8h4l3 3v5h-7V8z"></path>
+                            <path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"></path>
                         </svg>
                     </div>
-                    <div class="ops-stat-number" id="inTransitShipments">4</div>
-                    <div class="ops-stat-label">Shipments In Transit</div>
+                    <div class="ops-stat-number-large" id="stat-temp-alerts" style="color: #ff4757;">2</div>
+                    <div class="ops-stat-label-new">Temperature Alerts</div>
+                    <div class="ops-stat-trend" style="color: #ff4757;">3 critical incidents</div>
                 </div>
-
-                <div class="ops-stat-card">
-                    <div class="ops-stat-icon" style="background: rgba(255, 71, 87, 0.15); color: var(--danger);">
+                <div class="ops-stat-card-new">
+                    <div class="ops-stat-icon-box" style="background: rgba(0,255,157,0.15); color: #00ff9d;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <path
-                                d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z">
-                            </path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
                         </svg>
                     </div>
-                    <div class="ops-stat-number" id="atRiskShipments" style="color: var(--danger);">2</div>
-                    <div class="ops-stat-label">At Risk Shipments</div>
+                    <div class="ops-stat-number-large">98.2%</div>
+                    <div class="ops-stat-label-new">On-Time Delivery</div>
+                    <div class="ops-stat-trend" style="color: var(--success);">Above target 95%</div>
                 </div>
-
-                <div class="ops-stat-card">
-                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                <div class="ops-stat-card-new">
+                    <div class="ops-stat-icon-box" style="background: rgba(255,184,48,0.15); color: #ffb830;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
-                            <path d="M14 2v20m-8-10h16"></path>
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
                         </svg>
                     </div>
-                    <div class="ops-stat-number" id="tempAlerts" style="color: var(--warning);">2</div>
-                    <div class="ops-stat-label">Temperature Alerts</div>
-                </div>
-
-                <div class="ops-stat-card">
-                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                    </div>
-                    <div class="ops-stat-number" id="pendingCompliance" style="color: var(--warning);">2</div>
-                    <div class="ops-stat-label">Pending Compliance</div>
+                    <div class="ops-stat-number-large">18%</div>
+                    <div class="ops-stat-label-new">Avg Risk Score</div>
+                    <div class="ops-stat-trend" style="color: var(--text-muted);">Low risk threshold</div>
                 </div>
             </div>
 
-            <!-- TWO COLUMN LAYOUT -->
-            <div class="ops-two-column">
-                <!-- LEFT COLUMN - MAP -->
-                <div class="ops-column-left">
-                    <div class="ops-map-container">
-                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">Live Global Shipments</h3>
-                        <canvas id="worldMap" style="width: 100%; height: 320px;"></canvas>
+            <!-- ROW 2: LIVE WORLD MAP -->
+            <div class="dash-row">
+                <div class="map-card-container">
+                    <div class="map-card-header">
+                        <div>
+                            <h3
+                                style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 2px;">
+                                Live Shipment Visibility</h3>
+                            <p
+                                style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                CRYOCORE — Global Cold-Chain Monitoring</p>
+                        </div>
+                        <div class="map-mini-stats">
+                            <div class="map-mini-stat">
+                                <div class="map-mini-stat-label">Active Shipments</div>
+                                <div class="map-mini-stat-val" style="color: #fff;">89</div>
+                            </div>
+                            <div class="divider-v"></div>
+                            <div class="map-mini-stat">
+                                <div class="map-mini-stat-label">Risk Score</div>
+                                <div class="map-mini-stat-val" style="color: var(--warning);">27%</div>
+                            </div>
+                            <div class="divider-v"></div>
+                            <div class="map-mini-stat">
+                                <div class="map-mini-stat-label">Temp Alerts</div>
+                                <div class="map-mini-stat-val" style="color: #ff4757;">2</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-legend-bar">
+                        <div class="legend-item"><span class="dot-s" style="background: #00ff9d;"></span> Normal</div>
+                        <div class="legend-item"><span class="dot-s" style="background: #ffb830;"></span> Warning</div>
+                        <div class="legend-item"><span class="dot-s" style="background: #ff4757;"></span> Critical</div>
+                        <div style="width: 24px;"></div>
+                        <div class="legend-item"><span class="line-s" style="background: var(--accent-cyan);"></span>
+                            Primary route</div>
+                        <div class="legend-item"><span class="line-s" style="border-top: 2px dashed #6b8aaa;"></span>
+                            Backup route</div>
+                    </div>
+                    <div style="flex: 1; position: relative; background: #020b18;">
+                        <canvas id="dashboardMapCanvas" style="width: 100%; height: 100%;"></canvas>
+
+                        <!-- Floating labels (initially placed, JS will position them properly if needed or they'll be static approximations) -->
+                        <div class="map-floating-label" id="label-frankfurt" style="top: 20%; left: 48%;">SHP-2841 |
+                            4.2°C <span style="color: #00ff9d;">✓</span></div>
+                        <div class="map-floating-label" id="label-singapore" style="top: 65%; left: 75%;">SHP-2839 |
+                            -17.8°C <span style="color: #ff4757;">⚠</span></div>
+                        <div class="map-floating-label" id="label-chicago" style="top: 35%; left: 20%;">SHP-2835 |
+                            -68.9°C <span style="color: #00ff9d;">✓</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: RECENT ALERTS STRIP -->
+            <div class="dash-row">
+                <div class="alert-strip">
+                    <div style="display: flex; align-items: center; gap: 24px;">
+                        <span style="font-weight: 700; color: #fff; font-family: 'Manrope', sans-serif;">⚠️ Recent
+                            Alerts</span>
+                        <div style="display: flex; gap: 12px;">
+                            <div class="alert-pill"
+                                style="background: rgba(255,71,87,0.15); border: 1px solid rgba(255,71,87,0.3); color: #ffdada;">
+                                <span style="color: #ff4757;">🔴</span> SHP-2839 — Temp excursion -17.8°C
+                            </div>
+                            <div class="alert-pill"
+                                style="background: rgba(255,184,48,0.15); border: 1px solid rgba(255,184,48,0.3); color: #fff3d6;">
+                                <span style="color: #ffb830;">🟡</span> SHP-2830 — Customs delay +4h
+                            </div>
+                            <div class="alert-pill"
+                                style="background: rgba(255,184,48,0.15); border: 1px solid rgba(255,184,48,0.3); color: #fff3d6;">
+                                <span style="color: #ffb830;">🟡</span> Adjuvant Compound X — Low stock
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" onclick="navigateTo('alerts')"
+                        style="color: var(--accent-cyan); font-weight: 600; text-decoration: none; font-size: 0.9rem;">View
+                        All Alerts →</a>
+                </div>
+            </div>
+
+            <!-- ROW 4: TWO COLUMNS (Analytics & Distribution) -->
+            <div class="dash-row">
+                <div class="ops-stat-card-new ops-col-60" style="padding: 24px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                        <div>
+                            <h3
+                                style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                                Predictive Risk Analytics</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">AI-powered risk forecasting and
+                                analysis</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div
+                                style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">
+                                Current Risk Score</div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span
+                                    style="font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.5rem; color: #00ff9d;">19%</span>
+                                <span class="ops-badge normal" style="font-size: 0.65rem;">Low Risk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="height: 220px; position: relative;">
+                        <canvas id="riskAnalyticsChart"></canvas>
+                    </div>
+
+                    <div class="risk-factor-grid">
+                        <div class="risk-factor-card">
+                            <div style="font-size: 1.25rem; margin-bottom: 4px;">🌧️</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Weather</div>
+                            <div style="font-weight: 700; color: var(--warning);">12%</div>
+                            <div style="font-size: 0.65rem; color: var(--warning);">Moderate</div>
+                        </div>
+                        <div class="risk-factor-card">
+                            <div style="font-size: 1.25rem; margin-bottom: 4px;">📋</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Customs</div>
+                            <div style="font-weight: 700; color: #00ff9d;">9%</div>
+                            <div style="font-size: 0.65rem; color: #00ff9d;">Low</div>
+                        </div>
+                        <div class="risk-factor-card">
+                            <div style="font-size: 1.25rem; margin-bottom: 4px;">🌡️</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Temperature</div>
+                            <div style="font-weight: 700; color: #00ff9d;">7%</div>
+                            <div style="font-size: 0.65rem; color: #00ff9d;">Low</div>
+                        </div>
+                    </div>
+
+                    <div class="ai-recommendation-box">
+                        <div
+                            style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
+                            ✦ AI Recommendation</div>
+                        <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">Moderate delay
+                            probability detected. Consider alternative routing for shipments scheduled Thursday–Friday
+                            to avoid weather-related disruptions.</p>
                     </div>
                 </div>
 
-                <!-- RIGHT COLUMN - ALERTS -->
-                <div class="ops-column-right">
-                    <div class="ops-map-container">
-                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">Recent Alerts</h3>
-                        <div id="recentAlerts">
-                            <!-- Alerts will be populated here -->
+                <div class="ops-stat-card-new ops-col-40" style="padding: 24px;">
+                    <div style="margin-bottom: 24px;">
+                        <h3
+                            style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                            Global Shipment Distribution</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Active shipments by transport mode</p>
+                    </div>
+
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="distributionChart"></canvas>
+                        <div
+                            style="position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div
+                                style="font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.75rem; color: #fff;">
+                                1247</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total
+                                Units</div>
                         </div>
-                        <div style="text-align: center; margin-top: 16px;">
-                            <a href="#" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">View
-                                All Alerts →</a>
+                    </div>
+
+                    <div class="dist-grid">
+                        <div class="dist-card">
+                            <div class="dist-icon" style="background: rgba(0,212,255,0.1); color: #00d4ff;">✈️</div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">420</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Air (33.7%)</div>
+                            </div>
+                        </div>
+                        <div class="dist-card">
+                            <div class="dist-icon" style="background: rgba(0,153,187,0.1); color: #0099bb;">🚢</div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">315</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Sea (25.3%)</div>
+                            </div>
+                        </div>
+                        <div class="dist-card">
+                            <div class="dist-icon" style="background: rgba(255,184,48,0.1); color: #ffb830;">🚂</div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">268</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Rail (21.5%)</div>
+                            </div>
+                        </div>
+                        <div class="dist-card">
+                            <div class="dist-icon" style="background: rgba(0,255,157,0.1); color: #00ff9d;">🚛</div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">244</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted);">Road (19.6%)</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ACTIVE SHIPMENTS TABLE -->
-            <div style="margin-top: 24px;">
-                <h3 style="margin-bottom: 20px; color: var(--text-primary);">Active Shipments</h3>
-                <table class="ops-table">
-                    <thead>
-                        <tr>
-                            <th>Shipment ID</th>
-                            <th>Client</th>
-                            <th>Origin → Dest</th>
-                            <th>Transport</th>
-                            <th>Current Temp</th>
-                            <th>Status</th>
-                            <th>Risk</th>
-                            <th>ETA</th>
-                        </tr>
-                    </thead>
-                    <tbody id="activeShipmentsTable">
-                        <!-- Shipments will be populated here -->
-                    </tbody>
-                </table>
+            <!-- ROW 5: TWO COLUMNS (Compliance & Capacity) -->
+            <div class="dash-row">
+                <div class="ops-stat-card-new ops-col-50">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
+                        <div>
+                            <h3
+                                style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                                Compliance Monitoring</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Regulatory compliance status
+                                tracking</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Overall
+                            </div>
+                            <div
+                                style="font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--accent-cyan);">
+                                94%</div>
+                        </div>
+                    </div>
+
+                    <div class="compliance-circles">
+                        <div class="comp-circle-wrap">
+                            <div class="comp-circle">
+                                <svg width="70" height="70" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#1a3050" stroke-width="8">
+                                    </circle>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#00ff9d" stroke-width="8"
+                                        stroke-dasharray="283" stroke-dashoffset="0"></circle>
+                                </svg>
+                                <div class="comp-percent">100%</div>
+                            </div>
+                            <div class="comp-label">GDP</div>
+                            <span class="ops-badge normal" style="font-size: 0.6rem; padding: 2px 6px;">Verified</span>
+                        </div>
+                        <div class="comp-circle-wrap">
+                            <div class="comp-circle">
+                                <svg width="70" height="70" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#1a3050" stroke-width="8">
+                                    </circle>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#00ff9d" stroke-width="8"
+                                        stroke-dasharray="283" stroke-dashoffset="0"></circle>
+                                </svg>
+                                <div class="comp-percent">100%</div>
+                            </div>
+                            <div class="comp-label">Temp Logs</div>
+                            <span class="ops-badge normal" style="font-size: 0.6rem; padding: 2px 6px;">Verified</span>
+                        </div>
+                        <div class="comp-circle-wrap">
+                            <div class="comp-circle">
+                                <svg width="70" height="70" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#1a3050" stroke-width="8">
+                                    </circle>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#ffb830" stroke-width="8"
+                                        stroke-dasharray="283" stroke-dashoffset="42"></circle>
+                                </svg>
+                                <div class="comp-percent">85%</div>
+                            </div>
+                            <div class="comp-label">Custody</div>
+                            <span class="ops-badge warning" style="font-size: 0.6rem; padding: 2px 6px;">Pending</span>
+                        </div>
+                        <div class="comp-circle-wrap">
+                            <div class="comp-circle">
+                                <svg width="70" height="70" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#1a3050" stroke-width="8">
+                                    </circle>
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#00d4ff" stroke-width="8"
+                                        stroke-dasharray="283" stroke-dashoffset="23"></circle>
+                                </svg>
+                                <div class="comp-percent">92%</div>
+                            </div>
+                            <div class="comp-label">Docs</div>
+                            <span class="ops-badge info"
+                                style="font-size: 0.6rem; padding: 2px 6px; background: rgba(0,212,255,0.1); color: #00d4ff;">In
+                                Review</span>
+                        </div>
+                    </div>
+
+                    <div class="compliance-bars" style="margin-top: 24px;">
+                        <div class="compliance-bar-row">
+                            <div class="comp-bar-head"><span>GDP Compliance</span> <span>100%</span></div>
+                            <div class="ops-progress-bar">
+                                <div class="ops-progress-fill" style="width: 100%; background: #00ff9d;"></div>
+                            </div>
+                        </div>
+                        <div class="compliance-bar-row">
+                            <div class="comp-bar-head"><span>Temperature Logs</span> <span>100%</span></div>
+                            <div class="ops-progress-bar">
+                                <div class="ops-progress-fill" style="width: 100%; background: #00ff9d;"></div>
+                            </div>
+                        </div>
+                        <div class="compliance-bar-row">
+                            <div class="comp-bar-head"><span>Chain of Custody</span> <span>85%</span></div>
+                            <div class="ops-progress-bar">
+                                <div class="ops-progress-fill" style="width: 85%; background: #ffb830;"></div>
+                            </div>
+                        </div>
+                        <div class="compliance-bar-row">
+                            <div class="comp-bar-head"><span>Documentation</span> <span>92%</span></div>
+                            <div class="ops-progress-bar">
+                                <div class="ops-progress-fill" style="width: 92%; background: #00d4ff;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="compliance-certificate-card">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.25rem;">🛡️</span>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.85rem;">GDP Certification Valid
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">Next audit: April 15, 2026
+                                </div>
+                            </div>
+                        </div>
+                        <span style="color: #00ff9d;">✅</span>
+                    </div>
+                </div>
+
+                <div class="ops-stat-card-new ops-col-50">
+                    <div style="margin-bottom: 24px;">
+                        <h3
+                            style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                            Carrier Capacity Monitoring</h3>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Available logistics capacity by
+                            transport mode</p>
+                    </div>
+
+                    <div style="height: 180px; position: relative;">
+                        <canvas id="carrierChart"></canvas>
+                    </div>
+
+                    <div
+                        style="display: flex; gap: 16px; justify-content: center; margin-top: 16px; font-size: 0.7rem; color: var(--text-muted);">
+                        <div class="legend-item"><span class="dot-s" style="background: #00d4ff;"></span> Air</div>
+                        <div class="legend-item"><span class="dot-s" style="background: #00ff9d;"></span> Sea</div>
+                        <div class="legend-item"><span class="dot-s" style="background: #ffb830;"></span> Rail</div>
+                        <div class="legend-item"><span class="dot-s" style="background: #ff4757;"></span> Road</div>
+                    </div>
+
+                    <div class="carrier-highlights">
+                        <div class="carrier-h-card">
+                            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">
+                                Highest Air</div>
+                            <div style="font-weight: 700; color: #00d4ff; font-size: 0.85rem; margin: 4px 0;">FedEx
+                                Healthcare</div>
+                            <div style="font-size: 0.75rem; color: #00d4ff;">198 units</div>
+                        </div>
+                        <div class="carrier-h-card">
+                            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">
+                                Highest Sea</div>
+                            <div style="font-weight: 700; color: #00d4ff; font-size: 0.85rem; margin: 4px 0;">
+                                Kuehne+Nagel</div>
+                            <div style="font-size: 0.75rem; color: #00d4ff;">156 units</div>
+                        </div>
+                        <div class="carrier-h-card">
+                            <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">
+                                Highest Road</div>
+                            <div style="font-weight: 700; color: #00d4ff; font-size: 0.85rem; margin: 4px 0;">Marken
+                            </div>
+                            <div style="font-size: 0.75rem; color: #00d4ff;">167 units</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 6: ACTIVE SHIPMENTS TABLE -->
+            <div class="dash-row">
+                <div class="ops-stat-card-new" style="padding: 0;">
+                    <div style="padding: 24px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3
+                                style="font-family: 'Manrope', sans-serif; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                                Active Shipments</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">Prioritized by risk level</p>
+                        </div>
+                        <a href="#" onclick="navigateTo('shipments')"
+                            style="color: var(--accent-cyan); font-weight: 600; text-decoration: none; font-size: 0.9rem;">View
+                            All Shipments →</a>
+                    </div>
+                    <table class="ops-table" style="border: none; border-radius: 0;">
+                        <thead>
+                            <tr>
+                                <th>SHP ID</th>
+                                <th>Client</th>
+                                <th>Route</th>
+                                <th>Temp Status</th>
+                                <th>Status</th>
+                                <th>Risk</th>
+                                <th>ETA</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardActiveShipments">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -1878,7 +2567,12 @@
             populateCompliance();
             populateAlerts();
             initEventListeners();
-            initWorldMap();
+
+            // Dashboard initializations
+            initDashboardCharts();
+            initDashboardMap();
+            setTimeout(initDashboardCharts, 200);
+            setTimeout(initDashboardMap, 300);
 
             ['filterClient', 'filterStatus',
                 'filterTempZone', 'filterTransport',
@@ -1968,7 +2662,16 @@
                 target.classList.add('active');
                 if (link) link.classList.add('active');
             }
+
             // Initialize page-specific content
+            if (pageName === 'dashboard') {
+                initDashboardCharts();
+                initDashboardMap();
+                setTimeout(initDashboardCharts, 200);
+                setTimeout(initDashboardMap, 300);
+                populateDashboard();
+            }
+
             if (pageName === 'shipments') {
                 setTimeout(() => {
                     applyShipmentFilters(); // This will populate the table with filters
@@ -2025,59 +2728,138 @@
         function populateDashboard() {
             // Update stat cards
             const totalActive = opsShipmentsData.length;
-            const inTransit = opsShipmentsData.filter(s => s.status === 'In Transit').length;
-            const atRisk = opsShipmentsData.filter(s => s.risk === 'High').length;
             const tempAlerts = opsShipmentsData.filter(s => s.tempStatus !== 'normal').length;
-            const pendingCompliance = opsShipmentsData.filter(s => s.compliance === 'Pending').length;
 
-            document.getElementById('totalActiveShipments').textContent = totalActive;
-            document.getElementById('inTransitShipments').textContent = inTransit;
-            document.getElementById('atRiskShipments').textContent = atRisk;
-            document.getElementById('tempAlerts').textContent = tempAlerts;
-            document.getElementById('pendingCompliance').textContent = pendingCompliance;
-
-            // Populate recent alerts
-            const recentAlerts = document.getElementById('recentAlerts');
-            recentAlerts.innerHTML = alertsData.slice(0, 5).map(alert => `
-                <div class="ops-alert-card ${alert.type} ${alert.resolved ? 'resolved' : ''}">
-                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
-                        <div style="width: 8px; height: 8px; border-radius: 50%; background: ${alert.type === 'critical' ? 'var(--danger)' :
-                    alert.type === 'warning' ? 'var(--warning)' : 'var(--accent-cyan)'
-                }; margin-right: 8px;"></div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">${alert.shipmentId}</div>
-                            <div style="color: var(--text-muted); font-size: 0.75rem;">${alert.client} • ${alert.time}</div>
-                        </div>
-                    </div>
-                    <div style="color: var(--text-primary); font-size: 0.875rem; margin-bottom: 8px;">${alert.message}</div>
-                    ${!alert.resolved ? `<button class="ops-btn ops-btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="resolveAlert('${alert.id}')">Resolve</button>` : ''}
-                </div>
-            `).join('');
+            if (document.getElementById('stat-active-shipments'))
+                document.getElementById('stat-active-shipments').textContent = totalActive;
+            if (document.getElementById('stat-temp-alerts'))
+                document.getElementById('stat-temp-alerts').textContent = tempAlerts;
 
             // Populate active shipments table
-            const activeShipmentsTable = document.getElementById('activeShipmentsTable');
-            activeShipmentsTable.innerHTML = opsShipmentsData.map(shipment => `
-                <tr onclick="openShipmentDetail('${shipment.id}')">
-                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${shipment.id}</td>
-                    <td>${shipment.client}</td>
-                    <td>${shipment.origin} → ${shipment.destination}</td>
-                    <td>${shipment.transport}</td>
-                    <td>
-                        <span class="ops-temp-value ${shipment.tempStatus}">${shipment.currentTemp}°C</span>
-                    </td>
-                    <td>
-                        <span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">
-                            ${shipment.status}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="ops-badge ${shipment.risk === 'Low' ? 'normal' : shipment.risk === 'High' ? 'excursion' : 'warning'}">
-                            ${shipment.risk}
-                        </span>
-                    </td>
-                    <td style="font-family: 'Space Mono', monospace;">${shipment.eta}</td>
-                </tr>
-            `).join('');
+            const dashboardTable = document.getElementById('dashboardActiveShipments');
+            if (dashboardTable) {
+                const riskOrder = { 'High': 3, 'Medium': 2, 'Low': 1, 'Normal': 0 };
+                const sortedShipments = [...opsShipmentsData].sort((a, b) => (riskOrder[b.risk] || 0) - (riskOrder[a.risk] || 0));
+
+                dashboardTable.innerHTML = sortedShipments.slice(0, 5).map(shipment => {
+                    const tempBadge = shipment.tempStatus === 'normal' ? '✅ Normal' : shipment.tempStatus === 'warning' ? '⚠️ Warning' : '🚨 Excursion';
+                    const tempColor = shipment.tempStatus === 'normal' ? 'var(--success)' : shipment.tempStatus === 'warning' ? 'var(--warning)' : 'var(--danger)';
+                    const riskColor = shipment.risk === 'High' ? '#ff4757' : shipment.risk === 'Medium' ? '#ffb830' : '#00ff9d';
+
+                    return `
+                        <tr onclick="openShipmentDetail('${shipment.id}')">
+                            <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${shipment.id}</td>
+                            <td>${shipment.client}</td>
+                            <td>${shipment.origin} → ${shipment.destination}</td>
+                            <td><span style="color: ${tempColor}; font-weight: 600; font-size:0.75rem;">${tempBadge}</span></td>
+                            <td><span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">${shipment.status}</span></td>
+                            <td style="color: ${riskColor}; font-weight: 700;">${shipment.risk}</td>
+                            <td style="font-family: 'Space Mono', monospace;">${shipment.eta}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ===== DASHBOARD CHARTS =====
+        function initDashboardCharts() {
+            if (window.riskChartInstance) window.riskChartInstance.destroy();
+            if (window.distributionChartInstance) window.distributionChartInstance.destroy();
+            if (window.carrierChartInstance) window.carrierChartInstance.destroy();
+
+            const gridColor = 'rgba(255, 255, 255, 0.05)';
+            const tickColor = '#6b8aaa';
+
+            // 1. Risk Analytics
+            const riskCanvas = document.getElementById('riskAnalyticsChart');
+            if (riskCanvas) {
+                window.riskChartInstance = new Chart(riskCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Risk Score',
+                            data: [8, 22, 15, 28, 18, 12, 10],
+                            borderColor: '#ff4757',
+                            backgroundColor: 'rgba(255, 71, 87, 0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#ff4757'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: gridColor }, ticks: { color: tickColor }, min: 0, max: 40 },
+                            x: { grid: { display: false }, ticks: { color: tickColor } }
+                        }
+                    },
+                    plugins: [{
+                        afterDraw: chart => {
+                            const { ctx, scales: { y } } = chart;
+                            const drawLine = (val, color, label) => {
+                                const yPos = y.getPixelForValue(val);
+                                ctx.save();
+                                ctx.strokeStyle = color; ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
+                                ctx.beginPath(); ctx.moveTo(chart.chartArea.left, yPos); ctx.lineTo(chart.chartArea.right, yPos); ctx.stroke();
+                                ctx.fillStyle = color; ctx.font = '10px Space Grotesk'; ctx.fillText(label, chart.chartArea.left + 5, yPos - 5);
+                                ctx.restore();
+                            };
+                            drawLine(25, '#ff4757', 'Critical');
+                            drawLine(15, '#ffb830', 'Warning');
+                        }
+                    }]
+                });
+            }
+
+            // 2. Distribution
+            const distCanvas = document.getElementById('distributionChart');
+            if (distCanvas) {
+                window.distributionChartInstance = new Chart(distCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Air', 'Sea', 'Rail', 'Road'],
+                        datasets: [{
+                            data: [420, 315, 268, 244],
+                            backgroundColor: ['#00d4ff', '#0099bb', '#ffb830', '#00ff9d'],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, cutout: '75%',
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // 3. Carrier Capacity
+            const carrierCanvas = document.getElementById('carrierChart');
+            if (carrierCanvas) {
+                window.carrierChartInstance = new Chart(carrierCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['DHL Cold Chain', 'FedEx Healthcare', 'UPS Temperature', 'Kuehne+Nagel', 'Marken'],
+                        datasets: [{
+                            data: [145, 198, 152, 134, 121],
+                            backgroundColor: '#ff4757',
+                            borderRadius: 6,
+                            barThickness: 12
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: gridColor }, ticks: { color: tickColor } },
+                            y: { grid: { display: false }, ticks: { color: tickColor } }
+                        }
+                    }
+                });
+            }
         }
 
         // ===== POPULATE SHIPMENTS =====
@@ -2352,63 +3134,113 @@
         }
 
         // ===== WORLD MAP =====
-        function initWorldMap() {
-            const canvas = document.getElementById('worldMap');
+        // ===== DASHBOARD MAP =====
+        function initDashboardMap() {
+            const canvas = document.getElementById('dashboardMapCanvas');
             if (!canvas) return;
-
             const ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 320;
+            let W, H, mW, mH, oX, oY;
 
-            // Simple world map representation
-            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-surface');
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            function resize() {
+                const r = canvas.parentElement.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+                W = r.width; H = r.height;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const a = 2.0;
+                if (W / H > a) { mH = H * 0.95; mW = mH * a; } else { mW = W * 0.95; mH = mW / a; }
+                oX = (W - mW) / 2; oY = (H - mH) / 2;
+            }
+            resize();
 
-            // Draw simplified continents
-            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--border-color');
+            function px(lon, lat) {
+                return [oX + ((lon + 180) / 360) * mW, oY + ((90 - lat) / 180) * mH];
+            }
 
-            // North America
-            ctx.fillRect(canvas.width * 0.15, canvas.height * 0.2, canvas.width * 0.15, canvas.height * 0.25);
-
-            // Europe
-            ctx.fillRect(canvas.width * 0.45, canvas.height * 0.15, canvas.width * 0.08, canvas.height * 0.15);
-
-            // Asia
-            ctx.fillRect(canvas.width * 0.55, canvas.height * 0.15, canvas.width * 0.25, canvas.height * 0.3);
-
-            // Africa
-            ctx.fillRect(canvas.width * 0.42, canvas.height * 0.4, canvas.width * 0.1, canvas.height * 0.25);
-
-            // Australia
-            ctx.fillRect(canvas.width * 0.75, canvas.height * 0.65, canvas.width * 0.08, canvas.height * 0.08);
-
-            // Draw shipment locations
-            const locations = [
-                { x: 0.6, y: 0.35, id: 'SHP-2841', status: 'normal' },
-                { x: 0.8, y: 0.25, id: 'SHP-2839', status: 'warning' },
-                { x: 0.2, y: 0.3, id: 'SHP-2835', status: 'normal' },
-                { x: 0.85, y: 0.7, id: 'SHP-2830', status: 'normal' },
-                { x: 0.48, y: 0.5, id: 'SHP-2828', status: 'normal' },
-                { x: 0.47, y: 0.22, id: 'SHP-2820', status: 'normal' },
-                { x: 0.55, y: 0.42, id: 'SHP-2815', status: 'warning' }
+            // Simplified detailed landmass coordinates
+            const L = [
+                [[-168, 55], [-125, 48], [-110, 25], [-80, 8], [-77, 9], [-75, 40], [-60, 55], [-168, 55]], // North America
+                [[-80, 8], [-81, -5], [-71, -53], [-35, -5], [-80, 8]], // South America
+                [[-10, 36], [-10, 55], [20, 67], [60, 64], [30, 41], [-10, 36]], // Europe
+                [[-17, 14], [0, 35], [30, 31], [50, 0], [20, -34], [-17, 14]], // Africa
+                [[30, 31], [130, 63], [145, 10], [100, 5], [60, 25], [30, 31]], // Asia
+                [[114, -12], [153, -33], [116, -34], [114, -12]] // Australia
             ];
 
-            locations.forEach(loc => {
-                const x = canvas.width * loc.x;
-                const y = canvas.height * loc.y;
+            const cities = [
+                { n: 'Mumbai', lon: 72.88, lat: 19.08, s: 'normal' },
+                { n: 'Frankfurt', lon: 8.68, lat: 50.11, s: 'normal' },
+                { n: 'Singapore', lon: 103.82, lat: 1.35, s: 'atrisk' },
+                { n: 'New York', lon: -74, lat: 40.71, s: 'normal' },
+                { n: 'Chicago', lon: -87.62, lat: 41.87, s: 'normal' },
+                { n: 'London', lon: -0.12, lat: 51.5, s: 'normal' },
+                { n: 'Tokyo', lon: 139.69, lat: 35.68, s: 'warning' },
+                { n: 'Sydney', lon: 151.21, lat: -33.87, s: 'warning' },
+                { n: 'Paris', lon: 2.35, lat: 48.85, s: 'normal' },
+                { n: 'Lagos', lon: 3.39, lat: 6.45, s: 'normal' },
+                { n: 'Boston', lon: -71.06, lat: 42.36, s: 'normal' }
+            ];
 
-                // Draw pulsing dot
-                ctx.beginPath();
-                ctx.arc(x, y, 6, 0, 2 * Math.PI);
-                ctx.fillStyle = loc.status === 'warning' ? 'var(--warning)' : 'var(--accent-cyan)';
-                ctx.fill();
+            const routes = [
+                { f: 'Mumbai', t: 'Frankfurt', c: '#00ff9d', p: 0.68 },
+                { f: 'Singapore', t: 'New York', c: '#ff4757', p: 0.42, r: true },
+                { f: 'Chicago', t: 'London', c: '#00ff9d', p: 0.85 },
+                { f: 'Tokyo', t: 'Sydney', c: '#ffb830', p: 0.31, d: true },
+                { f: 'Paris', t: 'Lagos', c: '#00ff9d', p: 0.91 },
+                { f: 'Frankfurt', t: 'Boston', c: '#00d4ff', p: 0.55 }
+            ];
 
-                // Draw label
-                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-primary');
-                ctx.font = '10px Space Mono';
-                ctx.fillText(loc.id, x - 25, y - 10);
-            });
+            let anim = 0;
+            function draw() {
+                if (!document.getElementById('page-dashboard').classList.contains('active')) return;
+                anim += 0.005;
+                ctx.clearRect(0, 0, W, H);
+
+                // Land
+                ctx.fillStyle = '#0a1e35'; ctx.strokeStyle = 'rgba(0,212,255,0.2)';
+                L.forEach(p => {
+                    ctx.beginPath(); p.forEach((c, i) => { const pt = px(c[0], c[1]); i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]); });
+                    ctx.fill(); ctx.stroke();
+                });
+
+                // Routes
+                routes.forEach(r => {
+                    const c1 = cities.find(c => c.n === r.f), c2 = cities.find(c => c.n === r.t);
+                    const p1 = px(c1.lon, c1.lat), p2 = px(c2.lon, c2.lat);
+                    const mx = (p1[0] + p2[0]) / 2, my = (p1[1] + p2[1]) / 2 - Math.abs(p2[0] - p1[0]) * 0.2;
+
+                    ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.quadraticCurveTo(mx, my, p2[0], p2[1]);
+                    ctx.strokeStyle = r.c + '44'; ctx.setLineDash(r.d ? [4, 4] : []); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]);
+
+                    // Moving Dot
+                    const t = (r.p + anim * 0.05) % 1;
+                    const a = 1 - t;
+                    const dx = a * (a * p1[0] + t * mx) + t * (a * mx + t * p2[0]);
+                    const dy = a * (a * p1[1] + t * my) + t * (a * my + t * p2[1]);
+
+                    ctx.beginPath(); ctx.arc(dx, dy, 3, 0, Math.PI * 2); ctx.fillStyle = r.c; ctx.fill();
+                    if (r.r) {
+                        ctx.beginPath(); ctx.arc(dx, dy, 8 + Math.sin(anim * 5) * 4, 0, Math.PI * 2);
+                        ctx.strokeStyle = r.c + '66'; ctx.stroke();
+                    }
+                });
+
+                // Cities
+                cities.forEach(c => {
+                    const p = px(c.lon, c.lat);
+                    ctx.beginPath(); ctx.arc(p[0], p[1], 4, 0, Math.PI * 2);
+                    ctx.fillStyle = c.s === 'normal' ? '#00ff9d' : c.s === 'atrisk' ? '#ff4757' : '#ffb830';
+                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(p[0], p[1], 8, 0, Math.PI * 2);
+                    ctx.strokeStyle = ctx.fillStyle + '44'; ctx.stroke();
+                });
+
+                requestAnimationFrame(draw);
+            }
+            draw();
         }
+
+        function initWorldMap() { /* Legacy placeholder */ }
 
         // ===== UTILITY FUNCTIONS =====
         function resolveAlert(alertId) {
