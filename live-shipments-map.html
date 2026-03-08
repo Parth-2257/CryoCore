@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoCore Live Shipments Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0f1a;
+            color: #e8f4ff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Map Container */
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Overlay Container */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .overlay-container>* {
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(10, 20, 35, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 12px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Header Bar */
+        .header-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 20;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #00d4ff;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .control-btn {
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            background: rgba(10, 20, 35, 0.6);
+            border-radius: 8px;
+            color: #64b5f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            background: rgba(10, 20, 35, 0.8);
+            color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Live Shipments Panel */
+        .shipments-panel {
+            position: absolute;
+            top: 110px;
+            left: 20px;
+            width: 420px;
+            max-height: 600px;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(100, 200, 255, 0.15);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e8f4ff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #00ff9d;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(0, 255, 157, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        .panel-badge {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .shipment-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            margin-bottom: 12px;
+            background: rgba(0, 212, 255, 0.03);
+            border: 1px solid rgba(100, 200, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .shipment-item:hover {
+            background: rgba(0, 212, 255, 0.08);
+            border-color: rgba(100, 200, 255, 0.3);
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.1);
+        }
+
+        .shipment-item.active {
+            border-color: rgba(0, 255, 157, 0.4);
+            background: rgba(0, 255, 157, 0.05);
+        }
+
+        .shipment-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 16px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .shipment-status::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            opacity: 0.3;
+            animation: pulse-ring 2s infinite;
+        }
+
+        .shipment-status.active {
+            background: #00ff9d;
+            color: #00ff9d;
+        }
+
+        .shipment-status.warning {
+            background: #ffb830;
+            color: #ffb830;
+        }
+
+        .shipment-status.critical {
+            background: #ff4757;
+            color: #ff4757;
+        }
+
+        .shipment-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .shipment-id {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+
+        .shipment-route {
+            font-size: 12px;
+            color: #64b5f6;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shipment-temp {
+            font-size: 11px;
+            color: #90caf9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shipment-eta {
+            font-size: 12px;
+            color: #e8f4ff;
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: absolute;
+            top: 110px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 15;
+        }
+
+        .map-control-btn {
+            width: 48px;
+            height: 48px;
+            background: rgba(10, 20, 35, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 10px;
+            color: #64b5f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-control-btn:hover {
+            background: rgba(10, 20, 35, 0.9);
+            color: #00d4ff;
+            border-color: rgba(100, 200, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Route Info Panel */
+        .route-info-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            padding: 20px;
+        }
+
+        .route-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .route-stat {
+            text-align: center;
+            padding: 16px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            border-radius: 8px;
+        }
+
+        .route-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 4px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+
+        .route-stat-label {
+            font-size: 11px;
+            color: #64b5f6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            padding: 12px;
+            background: rgba(10, 20, 35, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(100, 200, 255, 0.15);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #90caf9;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Custom Map Styles */
+        .leaflet-container {
+            background: #0a0f1a;
+        }
+
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .leaflet-control-zoom a {
+            background: rgba(10, 20, 35, 0.8) !important;
+            border: 1px solid rgba(100, 200, 255, 0.2) !important;
+            color: #64b5f6 !important;
+            margin-bottom: 4px !important;
+            border-radius: 6px !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: rgba(10, 20, 35, 0.9) !important;
+            color: #00d4ff !important;
+            border-color: rgba(100, 200, 255, 0.4) !important;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 20, 35, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 200, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 200, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .shipments-panel {
+                width: calc(100% - 40px);
+                max-height: 300px;
+            }
+
+            .route-info-panel {
+                width: calc(100% - 40px);
+                bottom: 80px;
+            }
+
+            .header-bar {
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="window.location.href='ops-dashboard.html'" style="position:fixed;
+  top:20px;
+  left:20px;
+  z-index:9999;
+  background:rgba(13,31,56,0.92);
+  border:1px solid #00d4ff;
+  color:#00d4ff;
+  border-radius:8px;
+  padding:10px 18px;
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:600;
+  font-size:0.9rem;
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:all 0.3s ease;">
+        ← Back to Shipments
+    </button>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Overlay Container -->
+    <div class="overlay-container">
+        <!-- Header Bar -->
+        <div class="header-bar glass-panel">
+            <div class="logo">
+                <div class="logo-icon">❄️</div>
+                CRYOCORE LIVE
+            </div>
+            <div class="header-controls">
+                <button class="control-btn" title="Filter Shipments">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </button>
+                <button class="control-btn" title="Alerts">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                </button>
+                <button class="control-btn" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.5">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M12 1v6m0 6v6m4.22-13.22l4.24 4.24M1.54 9.54l4.24 4.24M1.54 14.46l4.24-4.24M18.46 14.46l4.24-4.24">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Shipments Panel -->
+        <div class="shipments-panel glass-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <div class="live-indicator"></div>
+                    Live Shipments
+                </div>
+                <div class="panel-badge">7 ACTIVE</div>
+            </div>
+
+            <div class="shipment-list" id="shipmentList">
+                <!-- Shipments will be populated here -->
+            </div>
+        </div>
+
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <button class="map-control-btn" onclick="focusOnAllShipments()" title="Show All">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 1l22 22M9 9l6 6m-6 0l6-6"></path>
+                </svg>
+            </button>
+            <button class="map-control-btn" onclick="toggleHeatmap()" title="Heatmap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2v20m0-20c0 0-8 4-8 10s8 10 8 10m0-20c0 0 8 4 8 10s-8 10-8 10"></path>
+                </svg>
+            </button>
+            <button class="map-control-btn" onclick="toggleRoutes()" title="Toggle Routes">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+            </button>
+            <button class="map-control-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                        d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Route Info Panel -->
+        <div class="route-info-panel glass-panel">
+            <div class="route-stats">
+                <div class="route-stat">
+                    <div class="route-stat-value" id="totalDistance">24,851</div>
+                    <div class="route-stat-label">Total KM</div>
+                </div>
+                <div class="route-stat">
+                    <div class="route-stat-value" id="avgSpeed">847</div>
+                    <div class="route-stat-label">Avg KM/H</div>
+                </div>
+                <div class="route-stat">
+                    <div class="route-stat-value" id="activeRoutes">12</div>
+                    <div class="route-stat-label">Active Routes</div>
+                </div>
+                <div class="route-stat">
+                    <div class="route-stat-value" id="onTimeDelivery">94.2%</div>
+                    <div class="route-stat-label">On-Time</div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #00ff9d;"></div>
+                    <span>Normal</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ffb830;"></div>
+                    <span>Warning</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ff4757;"></div>
+                    <span>Critical</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Live shipment data with real coordinates
+        const liveShipments = [
+            {
+                id: "SHP-2841",
+                client: "BioGen Pharma",
+                product: "Lipid Nanoparticles",
+                origin: { lat: 19.0760, lng: 72.8777, city: "Mumbai" },
+                destination: { lat: 50.1109, lng: 8.6821, city: "Frankfurt" },
+                current: { lat: 25.2048, lng: 55.2708, city: "Dubai" },
+                transport: "Air",
+                carrier: "Lufthansa Cargo",
+                tempRange: "2–8°C",
+                currentTemp: 4.2,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "6h 20m",
+                progress: 68,
+                speed: 847
+            },
+            {
+                id: "SHP-2839",
+                client: "Novaris Labs",
+                product: "mRNA Stabilizer",
+                origin: { lat: 1.3521, lng: 103.8198, city: "Singapore" },
+                destination: { lat: 40.7128, lng: -74.0060, city: "New York" },
+                current: { lat: 25.2048, lng: 55.2708, city: "Dubai" },
+                transport: "Sea",
+                carrier: "Maersk Cold Chain",
+                tempRange: "-20°C",
+                currentTemp: -17.8,
+                tempStatus: "warning",
+                status: "At Risk",
+                risk: "High",
+                eta: "18h 45m",
+                progress: 42,
+                speed: 45
+            },
+            {
+                id: "SHP-2835",
+                client: "CrioMed Inc",
+                product: "Biologic API",
+                origin: { lat: 41.8781, lng: -87.6298, city: "Chicago" },
+                destination: { lat: 51.5074, lng: -0.1278, city: "London" },
+                current: { lat: 48.8566, lng: 2.3522, city: "Paris" },
+                transport: "Air",
+                carrier: "British Airways Cargo",
+                tempRange: "-70°C",
+                currentTemp: -68.9,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "3h 10m",
+                progress: 85,
+                speed: 920
+            },
+            {
+                id: "SHP-2830",
+                client: "BioGen Pharma",
+                product: "Sterile Vials",
+                origin: { lat: 35.6762, lng: 139.6503, city: "Tokyo" },
+                destination: { lat: -33.8688, lng: 151.2093, city: "Sydney" },
+                current: { lat: 1.3521, lng: 103.8198, city: "Singapore" },
+                transport: "Rail+Air",
+                carrier: "JAL Cargo",
+                tempRange: "2–8°C",
+                currentTemp: 5.1,
+                tempStatus: "normal",
+                status: "Customs Hold",
+                risk: "Medium",
+                eta: "14h 00m",
+                progress: 31,
+                speed: 0
+            },
+            {
+                id: "SHP-2828",
+                client: "VaxRoute SA",
+                product: "Vaccine Diluent",
+                origin: { lat: 48.8566, lng: 2.3522, city: "Paris" },
+                destination: { lat: 6.5244, lng: -3.3792, city: "Lagos" },
+                current: { lat: 25.2048, lng: 55.2708, city: "Dubai" },
+                transport: "Road",
+                carrier: "ThermoFreight Ltd",
+                tempRange: "2–8°C",
+                currentTemp: 3.8,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "2h 55m",
+                progress: 91,
+                speed: 120
+            },
+            {
+                id: "SHP-2820",
+                client: "Novaris Labs",
+                product: "Adjuvant Compound X",
+                origin: { lat: 50.1109, lng: 8.6821, city: "Frankfurt" },
+                destination: { lat: 42.3601, lng: -71.0589, city: "Boston" },
+                current: { lat: 51.5074, lng: -0.1278, city: "London" },
+                transport: "Air",
+                carrier: "Lufthansa Cargo",
+                tempRange: "-20°C",
+                currentTemp: -19.2,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "5h 30m",
+                progress: 55,
+                speed: 890
+            },
+            {
+                id: "SHP-2815",
+                client: "CrioMed Inc",
+                product: "Excipient Buffer A",
+                origin: { lat: 51.5074, lng: -0.1278, city: "London" },
+                destination: { lat: 25.2048, lng: 55.2708, city: "Dubai" },
+                current: { lat: 35.6762, lng: 42.1284, city: "Riyadh" },
+                transport: "Air",
+                carrier: "Emirates SkyCargo",
+                tempRange: "2–8°C",
+                currentTemp: 7.9,
+                tempStatus: "warning",
+                status: "At Risk",
+                risk: "High",
+                eta: "1h 45m",
+                progress: 78,
+                speed: 950
+            }
+        ];
+
+        let map;
+        let markers = [];
+        let routes = [];
+        let selectedShipment = null;
+
+        // Initialize map
+        function initializeMap() {
+            map = L.map('map', {
+                center: [25, 20],
+                zoom: 3,
+                zoomControl: false,
+                attributionControl: false
+            });
+
+            // Dark theme tile layer
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors © CARTO'
+            }).addTo(map);
+
+            // Add zoom control to top right
+            L.control.zoom({
+                position: 'topright'
+            }).addTo(map);
+
+            // Initialize shipments
+            populateShipments();
+            addShipmentMarkers();
+            addShipmentRoutes();
+            updateRouteStats();
+        }
+
+        // Populate shipments list
+        function populateShipments() {
+            const shipmentList = document.getElementById('shipmentList');
+            shipmentList.innerHTML = liveShipments.map(shipment => `
+                <div class="shipment-item" onclick="focusShipment('${shipment.id}')" id="shipment-${shipment.id}">
+                    <div class="shipment-status ${shipment.tempStatus}"></div>
+                    <div class="shipment-info">
+                        <div class="shipment-id">${shipment.id}</div>
+                        <div class="shipment-route">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            ${shipment.origin.city} → ${shipment.destination.city}
+                        </div>
+                        <div class="shipment-temp">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                            </svg>
+                            ${shipment.currentTemp}°C / ${shipment.tempRange}
+                        </div>
+                    </div>
+                    <div class="shipment-eta">${shipment.eta}</div>
+                </div>
+            `).join('');
+        }
+
+        // Add shipment markers to map
+        function addShipmentMarkers() {
+            liveShipments.forEach(shipment => {
+                const color = shipment.tempStatus === 'normal' ? '#00ff9d' :
+                    shipment.tempStatus === 'warning' ? '#ffb830' : '#ff4757';
+
+                // Origin marker
+                const originIcon = L.divIcon({
+                    html: `<div style="background: ${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #0a0f1a; box-shadow: 0 0 20px ${color};"></div>`,
+                    iconSize: [16, 16],
+                    className: 'shipment-marker'
+                });
+
+                const originMarker = L.marker([shipment.origin.lat, shipment.origin.lng], { icon: originIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
+                            <strong>${shipment.id}</strong><br>
+                            Origin: ${shipment.origin.city}<br>
+                            Client: ${shipment.client}<br>
+                            Product: ${shipment.product}
+                        </div>
+                    `);
+
+                // Current location marker (pulsing)
+                const currentIcon = L.divIcon({
+                    html: `<div style="background: ${color}; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #0a0f1a; box-shadow: 0 0 30px ${color}; animation: pulse 2s infinite;"></div>`,
+                    iconSize: [22, 22],
+                    className: 'current-location-marker'
+                });
+
+                const currentMarker = L.marker([shipment.current.lat, shipment.current.lng], { icon: currentIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
+                            <strong>${shipment.id}</strong><br>
+                            Current: ${shipment.current.city}<br>
+                            Temperature: ${shipment.currentTemp}°C<br>
+                            Status: ${shipment.status}<br>
+                            Speed: ${shipment.speed} km/h<br>
+                            ETA: ${shipment.eta}
+                        </div>
+                    `);
+
+                // Destination marker
+                const destIcon = L.divIcon({
+                    html: `<div style="background: rgba(100, 200, 255, 0.6); width: 10px; height: 10px; border-radius: 50%; border: 2px solid #0a0f1a;"></div>`,
+                    iconSize: [14, 14],
+                    className: 'destination-marker'
+                });
+
+                const destMarker = L.marker([shipment.destination.lat, shipment.destination.lng], { icon: destIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
+                            <strong>${shipment.id}</strong><br>
+                            Destination: ${shipment.destination.city}<br>
+                            Expected: ${shipment.expectedDelivery || 'TBD'}
+                        </div>
+                    `);
+
+                markers.push({
+                    shipment: shipment,
+                    origin: originMarker,
+                    current: currentMarker,
+                    destination: destMarker
+                });
+            });
+        }
+
+        // Add shipment routes
+        function addShipmentRoutes() {
+            liveShipments.forEach(shipment => {
+                const color = shipment.tempStatus === 'normal' ? '#00ff9d' :
+                    shipment.tempStatus === 'warning' ? '#ffb830' : '#ff4757';
+
+                // Origin to current
+                const route1 = L.polyline([
+                    [shipment.origin.lat, shipment.origin.lng],
+                    [shipment.current.lat, shipment.current.lng]
+                ], {
+                    color: color,
+                    weight: 2,
+                    opacity: 0.8,
+                    dashArray: '10, 5'
+                }).addTo(map);
+
+                // Current to destination
+                const route2 = L.polyline([
+                    [shipment.current.lat, shipment.current.lng],
+                    [shipment.destination.lat, shipment.destination.lng]
+                ], {
+                    color: color,
+                    weight: 2,
+                    opacity: 0.4,
+                    dashArray: '5, 10'
+                }).addTo(map);
+
+                routes.push({ shipment, route1, route2 });
+            });
+        }
+
+        // Focus on specific shipment
+        function focusShipment(shipmentId) {
+            const shipment = liveShipments.find(s => s.id === shipmentId);
+            if (!shipment) return;
+
+            // Remove active class from all items
+            document.querySelectorAll('.shipment-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to selected
+            document.getElementById(`shipment-${shipmentId}`).classList.add('active');
+
+            // Center map on current location
+            map.setView([shipment.current.lat, shipment.current.lng], 6, {
+                animate: true,
+                duration: 1
+            });
+
+            // Open popup
+            const markerData = markers.find(m => m.shipment.id === shipmentId);
+            if (markerData) {
+                markerData.current.openPopup();
+            }
+
+            selectedShipment = shipment;
+        }
+
+        // Focus on all shipments
+        function focusOnAllShipments() {
+            if (liveShipments.length === 0) return;
+
+            const bounds = L.latLngBounds(
+                liveShipments.flatMap(s => [
+                    [s.origin.lat, s.origin.lng],
+                    [s.current.lat, s.current.lng],
+                    [s.destination.lat, s.destination.lng]
+                ])
+            );
+
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+
+        // Toggle heatmap
+        let heatmapVisible = false;
+        function toggleHeatmap() {
+            heatmapVisible = !heatmapVisible;
+            // Implement heatmap logic here
+            console.log('Heatmap toggled:', heatmapVisible);
+        }
+
+        // Toggle routes
+        let routesVisible = true;
+        function toggleRoutes() {
+            routesVisible = !routesVisible;
+            routes.forEach(route => {
+                route.route1.setStyle({ opacity: routesVisible ? 0.8 : 0 });
+                route.route2.setStyle({ opacity: routesVisible ? 0.4 : 0 });
+            });
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Update route statistics
+        function updateRouteStats() {
+            const totalDistance = liveShipments.reduce((sum, s) => {
+                const dist = calculateDistance(s.origin, s.destination);
+                return sum + dist;
+            }, 0);
+
+            const avgSpeed = liveShipments.reduce((sum, s) => sum + s.speed, 0) / liveShipments.length;
+            const activeRoutes = new Set(liveShipments.map(s => `${s.origin.city}-${s.destination.city}`)).size;
+            const onTimePercentage = 94.2; // Calculate based on actual data
+
+            document.getElementById('totalDistance').textContent = Math.round(totalDistance).toLocaleString();
+            document.getElementById('avgSpeed').textContent = Math.round(avgSpeed);
+            document.getElementById('activeRoutes').textContent = activeRoutes;
+            document.getElementById('onTimeDelivery').textContent = `${onTimePercentage}%`;
+        }
+
+        // Calculate distance between two points
+        function calculateDistance(point1, point2) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (point2.lat - point1.lat) * Math.PI / 180;
+            const dLon = (point2.lng - point1.lng) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(point1.lat * Math.PI / 180) * Math.cos(point2.lat * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // Simulate real-time updates
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                // Update shipment positions slightly
+                liveShipments.forEach((shipment, index) => {
+                    if (shipment.status === 'In Transit' && shipment.speed > 0) {
+                        // Simulate small position changes
+                        const progress = shipment.progress / 100;
+                        const lat = shipment.origin.lat + (shipment.destination.lat - shipment.origin.lat) * progress;
+                        const lng = shipment.origin.lng + (shipment.destination.lng - shipment.origin.lng) * progress;
+
+                        // Add small random movement
+                        const latOffset = (Math.random() - 0.5) * 0.1;
+                        const lngOffset = (Math.random() - 0.5) * 0.1;
+
+                        shipment.current.lat = lat + latOffset;
+                        shipment.current.lng = lng + lngOffset;
+                        shipment.progress = Math.min(100, shipment.progress + Math.random() * 2);
+                    }
+                });
+
+                // Update markers
+                updateMarkerPositions();
+            }, 5000);
+        }
+
+        // Update marker positions
+        function updateMarkerPositions() {
+            markers.forEach(markerData => {
+                const { shipment, current } = markerData;
+                current.setLatLng([shipment.current.lat, shipment.current.lng]);
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeMap();
+            startRealTimeUpdates();
+
+            // Focus on all shipments after a short delay
+            setTimeout(() => {
+                focusOnAllShipments();
+            }, 1000);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function () {
+            map.invalidateSize();
+        });
+    </script>
+</body>
+
+</html>
