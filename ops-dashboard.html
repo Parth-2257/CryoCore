@@ -917,14 +917,6 @@
                 </svg>
                 <span>Alerts</span>
             </a>
-            <div class="sidebar-divider"></div>
-            <a href="index.html" class="sidebar-link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
-                <span>Back to Home</span>
-            </a>
         </nav>
     </aside>
 
@@ -1225,139 +1217,232 @@
                 </div>
             </div>
 
-            <!-- ROUTE FILTERS -->
-            <div class="ops-filter-bar">
-                <select class="ops-filter-select" id="originCity">
-                    <option value="">Select Origin</option>
-                    <option value="Mumbai">Mumbai</option>
-                    <option value="Singapore">Singapore</option>
-                    <option value="Chicago">Chicago</option>
-                    <option value="Tokyo">Tokyo</option>
-                    <option value="Paris">Paris</option>
-                </select>
-                <select class="ops-filter-select" id="destinationCity">
-                    <option value="">Select Destination</option>
-                    <option value="Frankfurt">Frankfurt</option>
-                    <option value="New York">New York</option>
-                    <option value="London">London</option>
-                    <option value="Sydney">Sydney</option>
-                    <option value="Lagos">Lagos</option>
-                </select>
-                <select class="ops-filter-select" id="urgency">
-                    <option value="">Select Urgency</option>
-                    <option value="Standard">Standard</option>
-                    <option value="Express">Express</option>
-                    <option value="Critical">Critical</option>
-                </select>
-                <select class="ops-filter-select" id="tempZone">
-                    <option value="">Select Temp Zone</option>
-                    <option value="2–8°C">2–8°C</option>
-                    <option value="-20°C">-20°C</option>
-                    <option value="-70°C">-70°C</option>
-                </select>
-                <button class="ops-btn ops-btn-primary">Compare Routes</button>
-            </div>
-
-            <!-- ROUTE COMPARISON CARDS -->
-            <div class="ops-grid-2x2">
-                <div class="ops-route-card recommended" style="position: relative;">
-                    <div class="ops-recommended-badge">Recommended</div>
-                    <div style="font-size: 2rem; margin-bottom: 16px;">✈️</div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Air Freight</h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Transit Time:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">8–12 hours</span>
+            <!-- NEW ORDER BANNER -->
+            <div id="latestOrderBanner"
+                style="border-left: 4px solid var(--accent-cyan); background: rgba(0, 212, 255, 0.05); border: 1px solid #1a3050; border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; position: relative;">
+                <h4
+                    style="color: var(--accent-cyan); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <span>📦</span> New Order Received
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Client
+                        </div>
+                        <div id="bannerClient" style="font-weight: 600;">BioGen Pharma</div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Cost Estimate:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">$18,400</span>
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Product
+                        </div>
+                        <div id="bannerProduct" style="font-weight: 600;">Lipid Nanoparticles</div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Risk Score:</span>
-                        <span class="ops-badge normal">Low</span>
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Origin
+                        </div>
+                        <div id="bannerOrigin" style="font-weight: 600;">Mumbai</div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                        <span style="color: var(--text-muted);">Compliance:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">Full GDP compliant</span>
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">
+                            Temperature Zone</div>
+                        <div id="bannerTemp" style="font-weight: 600;">2–8°C</div>
                     </div>
-                    <button class="ops-btn ops-btn-primary" style="width: 100%;">Select Route</button>
                 </div>
-
-                <div class="ops-route-card">
-                    <div style="font-size: 2rem; margin-bottom: 16px;">🚢</div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Sea Freight</h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Transit Time:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">18–25 days</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Cost Estimate:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">$4,200</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Risk Score:</span>
-                        <span class="ops-badge warning">Medium</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                        <span style="color: var(--text-muted);">Compliance:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">Partial</span>
-                    </div>
-                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
-                </div>
-
-                <div class="ops-route-card">
-                    <div style="font-size: 2rem; margin-bottom: 16px;">🚂</div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Rail Transport</h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Transit Time:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">5–8 days</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Cost Estimate:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">$7,800</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Risk Score:</span>
-                        <span class="ops-badge normal">Low</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                        <span style="color: var(--text-muted);">Compliance:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">Full GDP compliant</span>
-                    </div>
-                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
-                </div>
-
-                <div class="ops-route-card">
-                    <div style="font-size: 2rem; margin-bottom: 16px;">🚛</div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Road Transport</h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Transit Time:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">2–4 days</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Cost Estimate:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">$3,100</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-muted);">Risk Score:</span>
-                        <span class="ops-badge warning">Medium</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                        <span style="color: var(--text-muted);">Compliance:</span>
-                        <span style="color: var(--text-primary); font-weight: 600;">Regional only</span>
-                    </div>
-                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
+                <div style="position: absolute; top: 16px; right: 20px;">
+                    <span
+                        style="background: rgba(255, 184, 48, 0.15); color: var(--warning); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                        Awaiting Route Assignment
+                    </span>
                 </div>
             </div>
 
-            <!-- BACKUP ROUTE SUGGESTION -->
-            <div
-                style="margin-top: 24px; padding: 20px; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-color);">
-                <h4 style="color: var(--text-primary); margin-bottom: 8px;">Backup Route Recommendation</h4>
-                <p style="color: var(--text-muted); margin: 0;">
-                    <strong>Sea + Air Combo:</strong> Transit: 4 days | Cost: $11,200 | Risk: <span
-                        class="ops-badge normal">Low</span>
-                </p>
+            <!-- ROUTE PLANNER FORM -->
+            <div class="ops-card"
+                style="padding: 24px; margin-bottom: 32px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="filter-group">
+                        <label class="filter-label">Origin</label>
+                        <input type="text" class="ops-filter-select" id="routeOrigin" value="Mumbai"
+                            placeholder="e.g. Mumbai" style="width: 100%;">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Destination</label>
+                        <input type="text" class="ops-filter-select" id="routeDestination"
+                            placeholder="Enter delivery destination..." style="width: 100%;">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Urgency</label>
+                        <select class="ops-filter-select" id="routeUrgency" style="width: 100%;">
+                            <option value="Standard">Standard (5-7 days)</option>
+                            <option value="Express">Express (2-3 days)</option>
+                            <option value="Critical">Critical (Next day)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Temperature Zone</label>
+                        <select class="ops-filter-select" id="routeTempZone" style="width: 100%;">
+                            <option value="2–8°C">2–8°C</option>
+                            <option value="-20°C">-20°C</option>
+                            <option value="-70°C">-70°C</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="ops-btn ops-btn-primary"
+                    style="width: 100%; margin-top: 24px; height: 48px; font-size: 1rem; font-weight: 600; border-radius: 8px;"
+                    onclick="showRouteResults()">🔍 Compare Routes</button>
+            </div>
+
+            <!-- ROUTE RESULTS -->
+            <div id="routeResultsSection" style="display: none;">
+                <h3 id="routeFromTo"
+                    style="margin-bottom: 24px; color: var(--accent-cyan); font-family: 'Space Grotesk', sans-serif;">
+                    Showing routes for: Mumbai → London</h3>
+                <div class="ops-grid-2x2">
+                    <!-- CARD 1 — AIR -->
+                    <div class="ops-route-card"
+                        style="border-top: 3px solid var(--accent-cyan); position: relative; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: all 0.3s ease;">
+                        <div style="position: absolute; top: 12px; right: 12px;">
+                            <span
+                                style="background: rgba(255, 215, 0, 0.15); color: #ffd700; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">⭐
+                                Recommended</span>
+                        </div>
+                        <div style="font-size: 1.5rem; margin-bottom: 12px;">✈️</div>
+                        <h4 style="margin-bottom: 16px; color: var(--text-primary);">Air Freight</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Transit Time:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">8–12 hours</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Cost Estimate:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">$18,400</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Risk Score:</span>
+                                <span style="color: var(--success); font-weight: 600;">Low</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Compliance:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">✅ Full GDP Compliant</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Temp Support:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">All zones supported</span>
+                            </div>
+                        </div>
+                        <button class="ops-btn ops-btn-primary"
+                            style="width: 100%; margin-top: 20px; border-radius: 8px;"
+                            onclick="selectRoute('Air', document.getElementById('routeOrigin').value, document.getElementById('routeDestination').value)">✅
+                            Select This Route</button>
+                    </div>
+
+                    <!-- CARD 2 — SEA -->
+                    <div class="ops-route-card"
+                        style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: all 0.3s ease;">
+                        <div style="font-size: 1.5rem; margin-bottom: 12px;">🚢</div>
+                        <h4 style="margin-bottom: 16px; color: var(--text-primary);">Ocean Freight</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Transit Time:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">18–25 days</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Cost Estimate:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">$4,200</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Risk Score:</span>
+                                <span style="color: var(--warning); font-weight: 600;">Medium</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Compliance:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">⚠️ Partial</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Temp Support:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">2–8°C and -20°C only</span>
+                            </div>
+                        </div>
+                        <button class="ops-btn ops-btn-outline"
+                            style="width: 100%; margin-top: 20px; border-radius: 8px;"
+                            onclick="selectRoute('Sea', document.getElementById('routeOrigin').value, document.getElementById('routeDestination').value)">Select
+                            This Route</button>
+                    </div>
+
+                    <!-- CARD 3 — RAIL -->
+                    <div class="ops-route-card"
+                        style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: all 0.3s ease;">
+                        <div style="font-size: 1.5rem; margin-bottom: 12px;">🚂</div>
+                        <h4 style="margin-bottom: 16px; color: var(--text-primary);">Rail Freight</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Transit Time:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">5–8 days</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Cost Estimate:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">$7,800</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Risk Score:</span>
+                                <span style="color: var(--success); font-weight: 600;">Low</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Compliance:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">✅ Full GDP Compliant</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Temp Support:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">All zones supported</span>
+                            </div>
+                        </div>
+                        <button class="ops-btn ops-btn-outline"
+                            style="width: 100%; margin-top: 20px; border-radius: 8px;"
+                            onclick="selectRoute('Rail', document.getElementById('routeOrigin').value, document.getElementById('routeDestination').value)">Select
+                            This Route</button>
+                    </div>
+
+                    <!-- CARD 4 — ROAD -->
+                    <div class="ops-route-card"
+                        style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: all 0.3s ease;">
+                        <div style="font-size: 1.5rem; margin-bottom: 12px;">🚛</div>
+                        <h4 style="margin-bottom: 16px; color: var(--text-primary);">Road Freight</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Transit Time:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">2–4 days</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Cost Estimate:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">$3,100</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Risk Score:</span>
+                                <span style="color: var(--warning); font-weight: 600;">Medium</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Compliance:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">⚠️ Regional only</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--text-muted);">Temp Support:</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">2–8°C only</span>
+                            </div>
+                        </div>
+                        <button class="ops-btn ops-btn-outline"
+                            style="width: 100%; margin-top: 20px; border-radius: 8px;"
+                            onclick="selectRoute('Road', document.getElementById('routeOrigin').value, document.getElementById('routeDestination').value)">Select
+                            This Route</button>
+                    </div>
+                </div>
+
+                <!-- Backup Route Strip -->
+                <div
+                    style="background: rgba(0,255,157,0.05); border: 1px solid rgba(0,255,157,0.2); padding: 14px 20px; border-radius: 10px; margin-top: 24px; font-size: 0.9rem; color: var(--text-primary);">
+                    <span style="color: #00ff9d; font-weight: 700;">💡 Backup Route:</span> Sea + Air combo — Transit: 4
+                    days | Cost: $11,200 | Risk: Low
+                </div>
+
+                <!-- Selection Message -->
+                <div id="routeSelectedMsg" style="display:none;"></div>
             </div>
         </section>
 
@@ -1840,7 +1925,7 @@
         const NOTIFICATIONS = [
             { id: 1, type: 'temp-breach', label: 'Critical Alert', text: 'Critical temperature alert for SHP-2839', time: '12 min ago', read: false },
             { id: 2, type: 'customs-delay', label: 'Delay', text: 'Customs delay for SHP-2830', time: '45 min ago', read: false },
-            { id: 3, type: 'shipment-update', label: 'Inventory', text: 'Inventory low for Adjuvant Compound X', time: '1 hr ago', read: false }
+            { id: 3, type: 'shipment-update', label: 'New Order', text: 'New order SHP-2841 received from Mumbai', time: 'Just now', read: false, origin: 'Mumbai', tempZone: '2–8°C' }
         ];
 
         function initNotifications() {
@@ -1848,7 +1933,8 @@
             if (!notifList) return;
 
             notifList.innerHTML = NOTIFICATIONS.map(n => `
-                <div class="notif-item ${n.read ? '' : 'unread'}">
+                <div class="notif-item ${n.read ? '' : 'unread'}" 
+                     ${n.origin && n.tempZone ? `onclick="goToRoutePlanner('${n.origin}', '${n.tempZone}')"` : ''}>
                     <div class="notif-dot ${n.type}"></div>
                     <div class="notif-content">
                         <span class="notif-label ${n.type}">${n.label}</span>
@@ -1878,14 +1964,60 @@
             const target = document.getElementById('page-' + pageName);
             const link = document.querySelector(`.sidebar-link[data-page="${pageName}"]`);
 
-            if (target) target.classList.add('active');
-            if (link) link.classList.add('active');
-
+            if (target) {
+                target.classList.add('active');
+                if (link) link.classList.add('active');
+            }
             // Initialize page-specific content
             if (pageName === 'shipments') {
                 setTimeout(() => {
                     applyShipmentFilters(); // This will populate the table with filters
                 }, 100);
+            }
+        }
+
+        function goToRoutePlanner(origin, tempZone) {
+            navigateTo('route-planner');
+
+            const originField = document.getElementById('routeOrigin');
+            const tempField = document.getElementById('routeTempZone');
+
+            if (originField) originField.value = origin;
+            if (tempField) tempField.value = tempZone;
+
+            const plannerSection = document.getElementById('page-route-planner');
+            if (plannerSection) plannerSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showRouteResults() {
+            const origin = document.getElementById('routeOrigin').value || 'Origin';
+            const destination = document.getElementById('routeDestination').value || 'Destination';
+
+            if (!destination || destination.trim() === '') {
+                alert('Please enter a destination first');
+                return;
+            }
+
+            const resultsSection = document.getElementById('routeResultsSection');
+            if (resultsSection) {
+                resultsSection.style.display = 'block';
+                document.getElementById('routeFromTo').textContent = origin + ' → ' + destination;
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function selectRoute(mode, origin, dest) {
+            const msg = document.getElementById('routeSelectedMsg');
+            if (msg) {
+                msg.style.display = 'block';
+                msg.innerHTML = '✅ Route Selected: <strong>' + mode + '</strong> — ' + origin + ' → ' + dest + ' | Assignment saved successfully.';
+                msg.style.background = 'rgba(0,255,157,0.08)';
+                msg.style.border = '1px solid rgba(0,255,157,0.3)';
+                msg.style.color = '#00ff9d';
+                msg.style.padding = '14px 20px';
+                msg.style.borderRadius = '10px';
+                msg.style.marginTop = '16px';
+                msg.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
