@@ -640,9 +640,9 @@ function initAnalyticsCharts() {
     }
 
     // Check if canvas elements exist
-    const regionCanvas = document.getElementById("regionChart");
-    const weeklyCanvas = document.getElementById("weeklyChart");
-    const transportCanvas = document.getElementById("transportChart");
+    const regionCanvas = document.getElementById("analyticsRegionChart");
+    const weeklyCanvas = document.getElementById("analyticsWeeklyChart");
+    const transportCanvas = document.getElementById("analyticsTransportChart");
 
     console.log('Canvas elements found:', regionCanvas, weeklyCanvas, transportCanvas);
 
