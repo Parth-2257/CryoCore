@@ -454,6 +454,31 @@
                 padding: 0 16px;
             }
         }
+
+        /* Leaflet Popup Styles */
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            background: #ffffff !important;
+            color: #0d1f38 !important;
+            border-radius: 8px;
+        }
+
+        .leaflet-popup-content {
+            color: #0d1f38 !important;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .leaflet-popup-close-button {
+            color: #0d1f38 !important;
+            padding: 8px !important;
+        }
+
+        .leaflet-popup-content strong {
+            color: #0d1f38;
+            font-weight: 700;
+        }
     </style>
 </head>
 
@@ -799,8 +824,8 @@
                 const originMarker = L.marker([shipment.origin.lat, shipment.origin.lng], { icon: originIcon })
                     .addTo(map)
                     .bindPopup(`
-                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
-                            <strong>${shipment.id}</strong><br>
+                        <div style="font-family: 'Space Grotesk', sans-serif; color: #0d1f38;">
+                            <strong style="color: #0d1f38; display: block; margin-bottom: 4px;">${shipment.id}</strong>
                             Origin: ${shipment.origin.city}<br>
                             Client: ${shipment.client}<br>
                             Product: ${shipment.product}
@@ -817,8 +842,8 @@
                 const currentMarker = L.marker([shipment.current.lat, shipment.current.lng], { icon: currentIcon })
                     .addTo(map)
                     .bindPopup(`
-                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
-                            <strong>${shipment.id}</strong><br>
+                        <div style="font-family: 'Space Grotesk', sans-serif; color: #0d1f38;">
+                            <strong style="color: #0d1f38; display: block; margin-bottom: 4px;">${shipment.id}</strong>
                             Current: ${shipment.current.city}<br>
                             Temperature: ${shipment.currentTemp}°C<br>
                             Status: ${shipment.status}<br>
@@ -837,8 +862,8 @@
                 const destMarker = L.marker([shipment.destination.lat, shipment.destination.lng], { icon: destIcon })
                     .addTo(map)
                     .bindPopup(`
-                        <div style="font-family: 'Inter', sans-serif; color: #e8f4ff;">
-                            <strong>${shipment.id}</strong><br>
+                        <div style="font-family: 'Space Grotesk', sans-serif; color: #0d1f38;">
+                            <strong style="color: #0d1f38; display: block; margin-bottom: 4px;">${shipment.id}</strong>
                             Destination: ${shipment.destination.city}<br>
                             Expected: ${shipment.expectedDelivery || 'TBD'}
                         </div>
