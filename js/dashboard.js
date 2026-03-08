@@ -815,6 +815,7 @@ function initAnalyticsCharts() {
 const form = document.getElementById('createOrderForm');
 const formSuccess = document.getElementById('formSuccess');
 const btnNewOrder = document.getElementById('btnNewOrder');
+const btnBackToDashboard = document.getElementById('btnBackToDashboard');
 
 const validators = {
     productName: { el: 'productName', err: 'errProductName', msg: 'Product name is required' },
@@ -861,12 +862,12 @@ Object.values(validators).forEach(v => {
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (validateForm()) {
-        // Simulate order creation
         const newOrder = {
-            id: 'ORD-' + (113 + Math.floor(Math.random() * 100)),
+            id: 'ORD-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(ORDERS.length + 1).padStart(3, '0'),
             product: document.getElementById('productName').value.trim(),
             qty: parseInt(document.getElementById('quantity').value),
             tempRange: document.getElementById('tempRange').value.trim(),
+            tempStatus: 'Normal',
             destination: document.getElementById('destination').value.trim(),
             status: 'Processing',
             created: new Date().toISOString().split('T')[0],
@@ -877,9 +878,7 @@ form.addEventListener('submit', (e) => {
         form.style.display = 'none';
         formSuccess.style.display = 'block';
 
-        // Re-render tables
-        renderOrdersTable();
-        renderRecentOrders();
+        renderOrders();
     }
 });
 
@@ -888,6 +887,15 @@ btnNewOrder.addEventListener('click', () => {
     form.style.display = 'block';
     formSuccess.style.display = 'none';
 });
+
+if (btnBackToDashboard) {
+    btnBackToDashboard.addEventListener('click', function () {
+        form.style.display = 'block';
+        formSuccess.style.display = 'none';
+        form.reset();
+        navigateTo('dashboard');
+    });
+}
 
 // ===== INITIALIZE =====
 function init() {
