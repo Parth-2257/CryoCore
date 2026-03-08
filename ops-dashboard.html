@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryoCore OPS — Control Tower</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        /* OPS-specific styles */
+        .ops-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .ops-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+        }
+        
+        .ops-stat-number {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .ops-stat-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .ops-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        .ops-map-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            height: 400px;
+            position: relative;
+        }
+        
+        .ops-alert-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .ops-alert-card.critical {
+            border-left-color: var(--danger);
+        }
+        
+        .ops-alert-card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .ops-alert-card.info {
+            border-left-color: var(--accent-cyan);
+        }
+        
+        .ops-alert-card.resolved {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        
+        .ops-route-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.2s ease;
+        }
+        
+        .ops-route-card.recommended {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .ops-route-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+        }
+        
+        .ops-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .ops-badge.normal {
+            background: rgba(0, 255, 157, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .ops-badge.warning {
+            background: rgba(255, 184, 48, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 184, 48, 0.3);
+        }
+        
+        .ops-badge.excursion {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+        
+        .ops-temp-value {
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+        }
+        
+        .ops-temp-value.normal {
+            color: var(--success);
+        }
+        
+        .ops-temp-value.warning {
+            color: var(--warning);
+        }
+        
+        .ops-temp-value.excursion {
+            color: var(--danger);
+        }
+        
+        .ops-progress-bar {
+            height: 6px;
+            background: var(--bg-surface);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        
+        .ops-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .ops-two-column {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .ops-column-left {
+            flex: 0 0 65%;
+        }
+        
+        .ops-column-right {
+            flex: 0 0 35%;
+        }
+        
+        .ops-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .ops-filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .ops-filter-select {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .ops-table {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .ops-table th {
+            background: var(--bg-surface);
+            color: var(--text-muted);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            text-align: left;
+            padding: 16px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .ops-table td {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .ops-table tr:hover {
+            background: var(--bg-surface);
+        }
+        
+        .ops-table tr {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .ops-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .ops-btn-primary {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+        
+        .ops-btn-primary:hover {
+            background: var(--accent-cyan-hover);
+        }
+        
+        .ops-btn-outline {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 2px solid var(--accent-cyan);
+        }
+        
+        .ops-btn-outline:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+        }
+        
+        .ops-btn-success {
+            background: var(--success);
+            color: var(--bg-primary);
+        }
+        
+        .ops-btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .ops-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .ops-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .ops-tab.active {
+            color: var(--accent-cyan);
+            border-bottom-color: var(--accent-cyan);
+        }
+        
+        .ops-tab:hover {
+            color: var(--text-primary);
+        }
+        
+        .ops-recommended-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: var(--bg-primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ops-fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .ops-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 212, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 212, 255, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <header class="dash-navbar">
+        <div class="navbar-left">
+            <img src="logo.png" alt="CryoCore" class="dash-logo">
+        </div>
+        <div class="navbar-right">
+            <button class="dark-mode-toggle" id="darkModeToggle">
+                <span class="dark-icon">🌙</span>
+                <span class="light-icon">☀️</span>
+            </button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" id="notificationBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h4>Notifications</h4>
+                        <button class="mark-all-read">Mark all read</button>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- Notifications will be added here -->
+                    </div>
+                </div>
+            </div>
+            <div class="profile-wrapper">
+                <button class="profile-btn" id="profileBtn">
+                    <span class="profile-avatar">MS</span>
+                </button>
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-header">
+                        <div class="profile-info">
+                            <h4>Mysha Rahman</h4>
+                            <p>Chief Technology Officer</p>
+                            <p class="profile-org">CryoCore Operations</p>
+                        </div>
+                    </div>
+                    <div class="profile-divider"></div>
+                    <a href="#" class="profile-link">My Profile</a>
+                    <a href="#" class="profile-link">Settings</a>
+                    <a href="#" class="profile-link">Help & Support</a>
+                    <div class="profile-divider"></div>
+                    <a href="index.html" class="profile-link logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar">
+        <nav class="sidebar-nav">
+            <a href="#" class="sidebar-link active" data-page="dashboard">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link" data-page="shipments">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 20H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+                    <polyline points="13 4 13 2 21 2 21 10 19 10"></polyline>
+                    <path d="M15 20v-6a4 4 0 00-4-4H9"></path>
+                </svg>
+                <span>Shipments</span>
+            </a>
+            <a href="#" class="sidebar-link" data-page="inventory">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                </svg>
+                <span>Inventory</span>
+            </a>
+            <a href="#" class="sidebar-link" data-page="route-planner">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>Route Planner</span>
+            </a>
+            <a href="#" class="sidebar-link" data-page="compliance">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span>Compliance</span>
+            </a>
+            <a href="#" class="sidebar-link" data-page="alerts">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <span>Alerts</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="index.html" class="sidebar-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Back to Home</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dash-main" id="dashMain">
+        <!-- DASHBOARD SECTION -->
+        <section class="dash-page active" id="page-dashboard">
+            <div class="page-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="page-subtitle">Welcome back, Mysha. Here's your global operations overview.</p>
+                </div>
+            </div>
+
+            <!-- STAT CARDS -->
+            <div class="stat-cards">
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="totalActiveShipments">7</div>
+                    <div class="ops-stat-label">Total Active Shipments</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 3h15v13H1z"></path>
+                            <path d="M16 8h4l3 3v5h-7V8z"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="inTransitShipments">4</div>
+                    <div class="ops-stat-label">Shipments In Transit</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 71, 87, 0.15); color: var(--danger);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="atRiskShipments" style="color: var(--danger);">2</div>
+                    <div class="ops-stat-label">At Risk Shipments</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2v20m-8-10h16"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="tempAlerts" style="color: var(--warning);">2</div>
+                    <div class="ops-stat-label">Temperature Alerts</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="pendingCompliance" style="color: var(--warning);">2</div>
+                    <div class="ops-stat-label">Pending Compliance</div>
+                </div>
+            </div>
+
+            <!-- TWO COLUMN LAYOUT -->
+            <div class="ops-two-column">
+                <!-- LEFT COLUMN - MAP -->
+                <div class="ops-column-left">
+                    <div class="ops-map-container">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">Live Global Shipments</h3>
+                        <canvas id="worldMap" style="width: 100%; height: 320px;"></canvas>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN - ALERTS -->
+                <div class="ops-column-right">
+                    <div class="ops-map-container">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">Recent Alerts</h3>
+                        <div id="recentAlerts">
+                            <!-- Alerts will be populated here -->
+                        </div>
+                        <div style="text-align: center; margin-top: 16px;">
+                            <a href="#" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">View All Alerts →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTIVE SHIPMENTS TABLE -->
+            <div style="margin-top: 24px;">
+                <h3 style="margin-bottom: 20px; color: var(--text-primary);">Active Shipments</h3>
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Shipment ID</th>
+                            <th>Client</th>
+                            <th>Origin → Dest</th>
+                            <th>Transport</th>
+                            <th>Current Temp</th>
+                            <th>Status</th>
+                            <th>Risk</th>
+                            <th>ETA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeShipmentsTable">
+                        <!-- Shipments will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SHIPMENTS SECTION -->
+        <section class="dash-page" id="page-shipments">
+            <div class="page-header">
+                <div>
+                    <h1>All Shipments</h1>
+                    <p class="page-subtitle">Complete visibility across all client shipments</p>
+                </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="ops-filter-bar">
+                <select class="ops-filter-select" id="clientFilter">
+                    <option value="">All Clients</option>
+                    <option value="BioGen Pharma">BioGen Pharma</option>
+                    <option value="Novaris Labs">Novaris Labs</option>
+                    <option value="CrioMed Inc">CrioMed Inc</option>
+                    <option value="VaxRoute SA">VaxRoute SA</option>
+                </select>
+                <select class="ops-filter-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="In Transit">In Transit</option>
+                    <option value="At Risk">At Risk</option>
+                    <option value="Customs Hold">Customs Hold</option>
+                    <option value="Delivered">Delivered</option>
+                </select>
+                <select class="ops-filter-select" id="tempZoneFilter">
+                    <option value="">All Temp Zones</option>
+                    <option value="2–8°C">2–8°C</option>
+                    <option value="-20°C">-20°C</option>
+                    <option value="-70°C">-70°C</option>
+                </select>
+                <select class="ops-filter-select" id="transportFilter">
+                    <option value="">All Transport</option>
+                    <option value="Air">Air</option>
+                    <option value="Sea">Sea</option>
+                    <option value="Rail">Rail</option>
+                    <option value="Road">Road</option>
+                </select>
+                <select class="ops-filter-select" id="sortBy">
+                    <option value="id">Sort by ID</option>
+                    <option value="client">Sort by Client</option>
+                    <option value="eta">Sort by ETA</option>
+                    <option value="risk">Sort by Risk</option>
+                </select>
+            </div>
+
+            <!-- SHIPMENTS TABLE -->
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>SHP ID</th>
+                        <th>Client</th>
+                        <th>Product</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Transport</th>
+                        <th>Temp Zone</th>
+                        <th>Current Temp</th>
+                        <th>Status</th>
+                        <th>Risk</th>
+                        <th>ETA</th>
+                        <th>Compliance</th>
+                    </tr>
+                </thead>
+                <tbody id="allShipmentsTable">
+                    <!-- Shipments will be populated here -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- INVENTORY SECTION -->
+        <section class="dash-page" id="page-inventory">
+            <div class="page-header">
+                <div>
+                    <h1>Raw Material Inventory</h1>
+                    <p class="page-subtitle">Certified pharmaceutical material stock levels</p>
+                </div>
+            </div>
+
+            <!-- INVENTORY STAT CARDS -->
+            <div class="stat-cards">
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="totalSKUs">6</div>
+                    <div class="ops-stat-label">Total SKUs</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20m-8-10h16"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="lowStockItems" style="color: var(--warning);">2</div>
+                    <div class="ops-stat-label">Low Stock Items</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 71, 87, 0.15); color: var(--danger);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="outOfStockItems" style="color: var(--danger);">1</div>
+                    <div class="ops-stat-label">Out of Stock</div>
+                </div>
+            </div>
+
+            <!-- INVENTORY TABLE -->
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Material Name</th>
+                        <th>Temp Zone</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Status</th>
+                        <th>Last Updated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTable">
+                    <!-- Inventory will be populated here -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ROUTE PLANNER SECTION -->
+        <section class="dash-page" id="page-route-planner">
+            <div class="page-header">
+                <div>
+                    <h1>Route Intelligence</h1>
+                    <p class="page-subtitle">Compare and select optimal routes for shipments</p>
+                </div>
+            </div>
+
+            <!-- ROUTE FILTERS -->
+            <div class="ops-filter-bar">
+                <select class="ops-filter-select" id="originCity">
+                    <option value="">Select Origin</option>
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="Chicago">Chicago</option>
+                    <option value="Tokyo">Tokyo</option>
+                    <option value="Paris">Paris</option>
+                </select>
+                <select class="ops-filter-select" id="destinationCity">
+                    <option value="">Select Destination</option>
+                    <option value="Frankfurt">Frankfurt</option>
+                    <option value="New York">New York</option>
+                    <option value="London">London</option>
+                    <option value="Sydney">Sydney</option>
+                    <option value="Lagos">Lagos</option>
+                </select>
+                <select class="ops-filter-select" id="urgency">
+                    <option value="">Select Urgency</option>
+                    <option value="Standard">Standard</option>
+                    <option value="Express">Express</option>
+                    <option value="Critical">Critical</option>
+                </select>
+                <select class="ops-filter-select" id="tempZone">
+                    <option value="">Select Temp Zone</option>
+                    <option value="2–8°C">2–8°C</option>
+                    <option value="-20°C">-20°C</option>
+                    <option value="-70°C">-70°C</option>
+                </select>
+                <button class="ops-btn ops-btn-primary">Compare Routes</button>
+            </div>
+
+            <!-- ROUTE COMPARISON CARDS -->
+            <div class="ops-grid-2x2">
+                <div class="ops-route-card recommended" style="position: relative;">
+                    <div class="ops-recommended-badge">Recommended</div>
+                    <div style="font-size: 2rem; margin-bottom: 16px;">✈️</div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Air Freight</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Transit Time:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">8–12 hours</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Cost Estimate:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">$18,400</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Risk Score:</span>
+                        <span class="ops-badge normal">Low</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <span style="color: var(--text-muted);">Compliance:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Full GDP compliant</span>
+                    </div>
+                    <button class="ops-btn ops-btn-primary" style="width: 100%;">Select Route</button>
+                </div>
+
+                <div class="ops-route-card">
+                    <div style="font-size: 2rem; margin-bottom: 16px;">🚢</div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Sea Freight</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Transit Time:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">18–25 days</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Cost Estimate:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">$4,200</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Risk Score:</span>
+                        <span class="ops-badge warning">Medium</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <span style="color: var(--text-muted);">Compliance:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Partial</span>
+                    </div>
+                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
+                </div>
+
+                <div class="ops-route-card">
+                    <div style="font-size: 2rem; margin-bottom: 16px;">🚂</div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Rail Transport</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Transit Time:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">5–8 days</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Cost Estimate:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">$7,800</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Risk Score:</span>
+                        <span class="ops-badge normal">Low</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <span style="color: var(--text-muted);">Compliance:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Full GDP compliant</span>
+                    </div>
+                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
+                </div>
+
+                <div class="ops-route-card">
+                    <div style="font-size: 2rem; margin-bottom: 16px;">🚛</div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Road Transport</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Transit Time:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">2–4 days</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Cost Estimate:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">$3,100</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--text-muted);">Risk Score:</span>
+                        <span class="ops-badge warning">Medium</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                        <span style="color: var(--text-muted);">Compliance:</span>
+                        <span style="color: var(--text-primary); font-weight: 600;">Regional only</span>
+                    </div>
+                    <button class="ops-btn ops-btn-outline" style="width: 100%;">Select Route</button>
+                </div>
+            </div>
+
+            <!-- BACKUP ROUTE SUGGESTION -->
+            <div style="margin-top: 24px; padding: 20px; background: var(--bg-surface); border-radius: 12px; border: 1px solid var(--border-color);">
+                <h4 style="color: var(--text-primary); margin-bottom: 8px;">Backup Route Recommendation</h4>
+                <p style="color: var(--text-muted); margin: 0;">
+                    <strong>Sea + Air Combo:</strong> Transit: 4 days | Cost: $11,200 | Risk: <span class="ops-badge normal">Low</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- COMPLIANCE SECTION -->
+        <section class="dash-page" id="page-compliance">
+            <div class="page-header">
+                <div>
+                    <h1>Compliance & Documentation</h1>
+                    <p class="page-subtitle">Validate documents and maintain audit-ready records</p>
+                </div>
+            </div>
+
+            <!-- COMPLIANCE STAT CARDS -->
+            <div class="stat-cards">
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(0, 255, 157, 0.15); color: var(--success);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" style="color: var(--success);">42</div>
+                    <div class="ops-stat-label">Documents Validated</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" style="color: var(--warning);">8</div>
+                    <div class="ops-stat-label">Pending Review</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 71, 87, 0.15); color: var(--danger);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" style="color: var(--danger);">3</div>
+                    <div class="ops-stat-label">Rejected</div>
+                </div>
+            </div>
+
+            <!-- PENDING DOCUMENTS TABLE -->
+            <h3 style="margin-bottom: 20px; color: var(--text-primary);">Pending Documents</h3>
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Shipment ID</th>
+                        <th>Client</th>
+                        <th>Document Type</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="pendingDocumentsTable">
+                    <!-- Documents will be populated here -->
+                </tbody>
+            </table>
+
+            <!-- AUDIT LOG -->
+            <h3 style="margin: 32px 0 20px; color: var(--text-primary);">Audit Log</h3>
+            <table class="ops-table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Shipment ID</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="auditLogTable">
+                    <!-- Audit entries will be populated here -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ALERTS SECTION -->
+        <section class="dash-page" id="page-alerts">
+            <div class="page-header">
+                <div>
+                    <h1>Alerts & Risk Management</h1>
+                    <p class="page-subtitle">Monitor and resolve operational risks in real time</p>
+                </div>
+            </div>
+
+            <!-- ALERT FILTER TABS -->
+            <div class="ops-tabs">
+                <button class="ops-tab active" data-filter="all">All</button>
+                <button class="ops-tab" data-filter="critical">Critical</button>
+                <button class="ops-tab" data-filter="warning">Warning</button>
+                <button class="ops-tab" data-filter="info">Info</button>
+                <button class="ops-tab" data-filter="resolved">Resolved</button>
+            </div>
+
+            <!-- ALERT STAT CARDS -->
+            <div class="stat-cards">
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 71, 87, 0.15); color: var(--danger);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="criticalActive" style="color: var(--danger);">2</div>
+                    <div class="ops-stat-label">Critical Active</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(255, 184, 48, 0.15); color: var(--warning);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="warningsActive" style="color: var(--warning);">3</div>
+                    <div class="ops-stat-label">Warnings Active</div>
+                </div>
+
+                <div class="ops-stat-card">
+                    <div class="ops-stat-icon" style="background: rgba(0, 255, 157, 0.15); color: var(--success);">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="ops-stat-number" id="resolvedToday" style="color: var(--success);">1</div>
+                    <div class="ops-stat-label">Resolved Today</div>
+                </div>
+            </div>
+
+            <!-- ALERTS LIST -->
+            <div id="alertsList">
+                <!-- Alerts will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- SHIPMENT DETAIL MODAL -->
+    <div class="modal-overlay" id="shipmentModalOverlay">
+        <div class="modal-dialog" id="shipmentModalDialog">
+            <div class="modal-header">
+                <h3>Shipment Details</h3>
+                <button class="modal-close" id="shipmentModalClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="shipmentModalBody">
+                <!-- Shipment details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- INVENTORY UPDATE MODAL -->
+    <div class="modal-overlay" id="inventoryModalOverlay">
+        <div class="modal-dialog" id="inventoryModalDialog">
+            <div class="modal-header">
+                <h3>Update Stock</h3>
+                <button class="modal-close" id="inventoryModalClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="inventoryUpdateForm">
+                    <div class="form-group">
+                        <label for="updateQuantity">New Quantity</label>
+                        <input type="number" id="updateQuantity" min="0" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="ops-btn ops-btn-primary">Update</button>
+                        <button type="button" class="ops-btn ops-btn-outline" id="cancelInventoryUpdate">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== MOCK DATA =====
+        const opsShipmentsData = [
+            {
+                id: "SHP-2841",
+                client: "BioGen Pharma",
+                product: "Lipid Nanoparticles",
+                origin: "Mumbai",
+                destination: "Frankfurt",
+                transport: "Air",
+                carrier: "Lufthansa Cargo",
+                tempRange: "2–8°C",
+                currentTemp: 4.2,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "6h 20m",
+                progress: 68,
+                compliance: "Validated",
+                createDate: "2025-03-01",
+                expectedDelivery: "2025-03-08"
+            },
+            {
+                id: "SHP-2839",
+                client: "Novaris Labs",
+                product: "mRNA Stabilizer",
+                origin: "Singapore",
+                destination: "New York",
+                transport: "Sea",
+                carrier: "Maersk Cold Chain",
+                tempRange: "-20°C",
+                currentTemp: -17.8,
+                tempStatus: "warning",
+                status: "At Risk",
+                risk: "High",
+                eta: "18h 45m",
+                progress: 42,
+                compliance: "Pending",
+                createDate: "2025-03-02",
+                expectedDelivery: "2025-03-12"
+            },
+            {
+                id: "SHP-2835",
+                client: "CrioMed Inc",
+                product: "Biologic API",
+                origin: "Chicago",
+                destination: "London",
+                transport: "Air",
+                carrier: "British Airways Cargo",
+                tempRange: "-70°C",
+                currentTemp: -68.9,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "3h 10m",
+                progress: 85,
+                compliance: "Validated",
+                createDate: "2025-03-03",
+                expectedDelivery: "2025-03-08"
+            },
+            {
+                id: "SHP-2830",
+                client: "BioGen Pharma",
+                product: "Sterile Vials",
+                origin: "Tokyo",
+                destination: "Sydney",
+                transport: "Rail+Air",
+                carrier: "JAL Cargo",
+                tempRange: "2–8°C",
+                currentTemp: 5.1,
+                tempStatus: "normal",
+                status: "Customs Hold",
+                risk: "Medium",
+                eta: "14h 00m",
+                progress: 31,
+                compliance: "Under Review",
+                createDate: "2025-03-04",
+                expectedDelivery: "2025-03-15"
+            },
+            {
+                id: "SHP-2828",
+                client: "VaxRoute SA",
+                product: "Vaccine Diluent",
+                origin: "Paris",
+                destination: "Lagos",
+                transport: "Road",
+                carrier: "ThermoFreight Ltd",
+                tempRange: "2–8°C",
+                currentTemp: 3.8,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "2h 55m",
+                progress: 91,
+                compliance: "Validated",
+                createDate: "2025-03-05",
+                expectedDelivery: "2025-03-08"
+            },
+            {
+                id: "SHP-2820",
+                client: "Novaris Labs",
+                product: "Adjuvant Compound X",
+                origin: "Frankfurt",
+                destination: "Boston",
+                transport: "Air",
+                carrier: "Lufthansa Cargo",
+                tempRange: "-20°C",
+                currentTemp: -19.2,
+                tempStatus: "normal",
+                status: "In Transit",
+                risk: "Low",
+                eta: "5h 30m",
+                progress: 55,
+                compliance: "Validated",
+                createDate: "2025-03-01",
+                expectedDelivery: "2025-03-09"
+            },
+            {
+                id: "SHP-2815",
+                client: "CrioMed Inc",
+                product: "Excipient Buffer A",
+                origin: "London",
+                destination: "Dubai",
+                transport: "Air",
+                carrier: "Emirates SkyCargo",
+                tempRange: "2–8°C",
+                currentTemp: 7.9,
+                tempStatus: "warning",
+                status: "At Risk",
+                risk: "High",
+                eta: "1h 45m",
+                progress: 78,
+                compliance: "Pending",
+                createDate: "2025-03-02",
+                expectedDelivery: "2025-03-08"
+            }
+        ];
+
+        const inventoryData = [
+            {
+                name: "Lipid Nanoparticles (LNP)",
+                sku: "INV-LNP-001",
+                tempZone: "-70°C",
+                quantity: 847,
+                unit: "vials",
+                status: "Available",
+                lastUpdated: "2025-03-08"
+            },
+            {
+                name: "Excipient Buffer A",
+                sku: "INV-EXC-002",
+                tempZone: "2–8°C",
+                quantity: 1240,
+                unit: "L",
+                status: "Available",
+                lastUpdated: "2025-03-07"
+            },
+            {
+                name: "Adjuvant Compound X",
+                sku: "INV-ADJ-003",
+                tempZone: "-20°C",
+                quantity: 120,
+                unit: "kg",
+                status: "Low Stock",
+                lastUpdated: "2025-03-06"
+            },
+            {
+                name: "mRNA Stabilizer",
+                sku: "INV-RNA-004",
+                tempZone: "-70°C",
+                quantity: 0,
+                unit: "kg",
+                status: "Out of Stock",
+                lastUpdated: "2025-03-05"
+            },
+            {
+                name: "Sterile Vials 10mL",
+                sku: "INV-VIA-005",
+                tempZone: "2–8°C",
+                quantity: 45000,
+                unit: "units",
+                status: "Available",
+                lastUpdated: "2025-03-08"
+            },
+            {
+                name: "Vaccine Diluent",
+                sku: "INV-VAC-006",
+                tempZone: "2–8°C",
+                quantity: 380,
+                unit: "vials",
+                status: "Low Stock",
+                lastUpdated: "2025-03-07"
+            }
+        ];
+
+        const alertsData = [
+            {
+                id: "ALT-001",
+                type: "critical",
+                shipmentId: "SHP-2839",
+                message: "Temperature excursion detected — -17.8°C (threshold: -20°C)",
+                client: "Novaris Labs",
+                time: "2 min ago",
+                resolved: false
+            },
+            {
+                id: "ALT-002",
+                type: "critical",
+                shipmentId: "SHP-2815",
+                message: "Temperature approaching limit — 7.9°C (max: 8°C)",
+                client: "CrioMed Inc",
+                time: "14 min ago",
+                resolved: false
+            },
+            {
+                id: "ALT-003",
+                type: "warning",
+                shipmentId: "SHP-2830",
+                message: "Customs delay in Singapore — ETA pushed by 4 hours",
+                client: "BioGen Pharma",
+                time: "38 min ago",
+                resolved: false
+            },
+            {
+                id: "ALT-004",
+                type: "warning",
+                shipmentId: "INV-ADJ-003",
+                message: "Adjuvant Compound X inventory below 15% threshold",
+                client: "Internal",
+                time: "1h ago",
+                resolved: false
+            },
+            {
+                id: "ALT-005",
+                type: "info",
+                shipmentId: "SHP-2841",
+                message: "Carrier capacity allocated — Lufthansa Cargo LH8821",
+                client: "BioGen Pharma",
+                time: "2h ago",
+                resolved: true
+            },
+            {
+                id: "ALT-006",
+                type: "warning",
+                shipmentId: "SHP-2828",
+                message: "Compliance document missing for Lagos delivery",
+                client: "VaxRoute SA",
+                time: "3h ago",
+                resolved: false
+            }
+        ];
+
+        // ===== GLOBAL VARIABLES =====
+        let currentFilter = 'all';
+        let currentInventorySKU = null;
+
+        // ===== DOM ELEMENTS =====
+        const pages = document.querySelectorAll('.dash-page');
+        const navLinks = document.querySelectorAll('.sidebar-link');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const notificationBtn = document.getElementById('notificationBtn');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const profileBtn = document.getElementById('profileBtn');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const shipmentModalOverlay = document.getElementById('shipmentModalOverlay');
+        const shipmentModalClose = document.getElementById('shipmentModalClose');
+        const inventoryModalOverlay = document.getElementById('inventoryModalOverlay');
+        const inventoryModalClose = document.getElementById('inventoryModalClose');
+        const inventoryUpdateForm = document.getElementById('inventoryUpdateForm');
+        const cancelInventoryUpdate = document.getElementById('cancelInventoryUpdate');
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            initNotifications();
+            populateDashboard();
+            populateShipments();
+            populateInventory();
+            populateCompliance();
+            populateAlerts();
+            initEventListeners();
+            initWorldMap();
+        });
+
+        // ===== DARK MODE =====
+        function initDarkMode() {
+            const darkMode = localStorage.getItem('darkMode') !== 'false';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+        });
+
+        // ===== NOTIFICATIONS =====
+        function initNotifications() {
+            const notifications = [
+                { id: 1, text: 'Critical temperature alert for SHP-2839', read: false },
+                { id: 2, text: 'Customs delay for SHP-2830', read: false },
+                { id: 3, text: 'Inventory low for Adjuvant Compound X', read: false }
+            ];
+
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = notifications.map(n => `
+                <div class="notification-item ${n.read ? 'read' : ''}">
+                    <div class="notification-dot ${n.read ? 'hidden' : ''}"></div>
+                    <div class="notification-text">${n.text}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('notificationBadge').textContent = notifications.filter(n => !n.read).length;
+        }
+
+        // ===== PAGE NAVIGATION =====
+        function navigateTo(pageName) {
+            pages.forEach(p => p.classList.remove('active'));
+            navLinks.forEach(l => l.classList.remove('active'));
+
+            const target = document.getElementById('page-' + pageName);
+            const link = document.querySelector(`.sidebar-link[data-page="${pageName}"]`);
+
+            if (target) target.classList.add('active');
+            if (link) link.classList.add('active');
+        }
+
+        // ===== POPULATE DASHBOARD =====
+        function populateDashboard() {
+            // Update stat cards
+            const totalActive = opsShipmentsData.length;
+            const inTransit = opsShipmentsData.filter(s => s.status === 'In Transit').length;
+            const atRisk = opsShipmentsData.filter(s => s.risk === 'High').length;
+            const tempAlerts = opsShipmentsData.filter(s => s.tempStatus !== 'normal').length;
+            const pendingCompliance = opsShipmentsData.filter(s => s.compliance === 'Pending').length;
+
+            document.getElementById('totalActiveShipments').textContent = totalActive;
+            document.getElementById('inTransitShipments').textContent = inTransit;
+            document.getElementById('atRiskShipments').textContent = atRisk;
+            document.getElementById('tempAlerts').textContent = tempAlerts;
+            document.getElementById('pendingCompliance').textContent = pendingCompliance;
+
+            // Populate recent alerts
+            const recentAlerts = document.getElementById('recentAlerts');
+            recentAlerts.innerHTML = alertsData.slice(0, 5).map(alert => `
+                <div class="ops-alert-card ${alert.type} ${alert.resolved ? 'resolved' : ''}">
+                    <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: ${
+                            alert.type === 'critical' ? 'var(--danger)' :
+                            alert.type === 'warning' ? 'var(--warning)' : 'var(--accent-cyan)'
+                        }; margin-right: 8px;"></div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem;">${alert.shipmentId}</div>
+                            <div style="color: var(--text-muted); font-size: 0.75rem;">${alert.client} • ${alert.time}</div>
+                        </div>
+                    </div>
+                    <div style="color: var(--text-primary); font-size: 0.875rem; margin-bottom: 8px;">${alert.message}</div>
+                    ${!alert.resolved ? `<button class="ops-btn ops-btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="resolveAlert('${alert.id}')">Resolve</button>` : ''}
+                </div>
+            `).join('');
+
+            // Populate active shipments table
+            const activeShipmentsTable = document.getElementById('activeShipmentsTable');
+            activeShipmentsTable.innerHTML = opsShipmentsData.map(shipment => `
+                <tr onclick="showShipmentDetails('${shipment.id}')">
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${shipment.id}</td>
+                    <td>${shipment.client}</td>
+                    <td>${shipment.origin} → ${shipment.destination}</td>
+                    <td>${shipment.transport}</td>
+                    <td>
+                        <span class="ops-temp-value ${shipment.tempStatus}">${shipment.currentTemp}°C</span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">
+                            ${shipment.status}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.risk === 'Low' ? 'normal' : shipment.risk === 'High' ? 'excursion' : 'warning'}">
+                            ${shipment.risk}
+                        </span>
+                    </td>
+                    <td style="font-family: 'Space Mono', monospace;">${shipment.eta}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== POPULATE SHIPMENTS =====
+        function populateShipments() {
+            const allShipmentsTable = document.getElementById('allShipmentsTable');
+            allShipmentsTable.innerHTML = opsShipmentsData.map(shipment => `
+                <tr onclick="showShipmentDetails('${shipment.id}')">
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${shipment.id}</td>
+                    <td>${shipment.client}</td>
+                    <td>${shipment.product}</td>
+                    <td>${shipment.origin}</td>
+                    <td>${shipment.destination}</td>
+                    <td>${shipment.transport}</td>
+                    <td>${shipment.tempRange}</td>
+                    <td>
+                        <span class="ops-temp-value ${shipment.tempStatus}">${shipment.currentTemp}°C</span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">
+                            ${shipment.status}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.risk === 'Low' ? 'normal' : shipment.risk === 'High' ? 'excursion' : 'warning'}">
+                            ${shipment.risk}
+                        </span>
+                    </td>
+                    <td style="font-family: 'Space Mono', monospace;">${shipment.eta}</td>
+                    <td>
+                        <span class="ops-badge ${shipment.compliance === 'Validated' ? 'normal' : 'warning'}">
+                            ${shipment.compliance}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== POPULATE INVENTORY =====
+        function populateInventory() {
+            // Update inventory stats
+            const totalSKUs = inventoryData.length;
+            const lowStock = inventoryData.filter(i => i.status === 'Low Stock').length;
+            const outOfStock = inventoryData.filter(i => i.status === 'Out of Stock').length;
+
+            document.getElementById('totalSKUs').textContent = totalSKUs;
+            document.getElementById('lowStockItems').textContent = lowStock;
+            document.getElementById('outOfStockItems').textContent = outOfStock;
+
+            // Populate inventory table
+            const inventoryTable = document.getElementById('inventoryTable');
+            inventoryTable.innerHTML = inventoryData.map(item => `
+                <tr>
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${item.sku}</td>
+                    <td>${item.name}</td>
+                    <td>${item.tempZone}</td>
+                    <td style="font-family: 'Space Mono', monospace;">${item.quantity.toLocaleString()}</td>
+                    <td>${item.unit}</td>
+                    <td>
+                        <span class="ops-badge ${item.status === 'Available' ? 'normal' : item.status === 'Low Stock' ? 'warning' : 'excursion'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>${item.lastUpdated}</td>
+                    <td>
+                        <button class="ops-btn ops-btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="openInventoryModal('${item.sku}', ${item.quantity})">
+                            Update Stock
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== POPULATE COMPLIANCE =====
+        function populateCompliance() {
+            // Generate pending documents
+            const pendingDocuments = [
+                { shipmentId: 'SHP-2839', client: 'Novaris Labs', type: 'GDP Certificate', submitted: '2025-03-07', status: 'Pending' },
+                { shipmentId: 'SHP-2815', client: 'CrioMed Inc', type: 'Import License', submitted: '2025-03-06', status: 'Pending' },
+                { shipmentId: 'SHP-2830', client: 'BioGen Pharma', type: 'Temperature Log', submitted: '2025-03-05', status: 'Under Review' },
+                { shipmentId: 'SHP-2828', client: 'VaxRoute SA', type: 'Customs Declaration', submitted: '2025-03-04', status: 'Pending' }
+            ];
+
+            const pendingDocumentsTable = document.getElementById('pendingDocumentsTable');
+            pendingDocumentsTable.innerHTML = pendingDocuments.map(doc => `
+                <tr>
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${doc.shipmentId}</td>
+                    <td>${doc.client}</td>
+                    <td>${doc.type}</td>
+                    <td>${doc.submitted}</td>
+                    <td>
+                        <span class="ops-badge ${doc.status === 'Pending' ? 'warning' : 'normal'}">
+                            ${doc.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="ops-btn ops-btn-success" style="font-size: 0.75rem; padding: 4px 8px; margin-right: 4px;">Approve</button>
+                        <button class="ops-btn ops-btn-danger" style="font-size: 0.75rem; padding: 4px 8px; margin-right: 4px;">Reject</button>
+                        <button class="ops-btn ops-btn-outline" style="font-size: 0.75rem; padding: 4px 8px;">Download</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Generate audit log
+            const auditLog = [
+                { timestamp: '2025-03-08 14:32', action: 'Document Approved', user: 'Mysha Rahman', shipmentId: 'SHP-2841', notes: 'GDP certificate validated' },
+                { timestamp: '2025-03-08 13:15', action: 'Temperature Alert', user: 'System', shipmentId: 'SHP-2839', notes: 'Temperature excursion detected' },
+                { timestamp: '2025-03-08 11:42', action: 'Route Changed', user: 'Mysha Rahman', shipmentId: 'SHP-2830', notes: 'Rerouted via Tokyo due to customs delay' },
+                { timestamp: '2025-03-08 09:28', action: 'Shipment Created', user: 'System', shipmentId: 'SHP-2841', notes: 'New shipment from BioGen Pharma' },
+                { timestamp: '2025-03-07 16:45', action: 'Compliance Check', user: 'Mysha Rahman', shipmentId: 'SHP-2835', notes: 'All documents validated' },
+                { timestamp: '2025-03-07 14:20', action: 'Inventory Updated', user: 'System', shipmentId: 'INV-ADJ-003', notes: 'Stock level changed to 120kg' },
+                { timestamp: '2025-03-07 12:10', action: 'Alert Resolved', user: 'Mysha Rahman', shipmentId: 'SHP-2820', notes: 'Temperature issue resolved' },
+                { timestamp: '2025-03-07 10:35', action: 'Document Rejected', user: 'Mysha Rahman', shipmentId: 'SHP-2815', notes: 'Incomplete import documentation' }
+            ];
+
+            const auditLogTable = document.getElementById('auditLogTable');
+            auditLogTable.innerHTML = auditLog.map(entry => `
+                <tr>
+                    <td style="font-family: 'Space Mono', monospace; font-size: 0.875rem;">${entry.timestamp}</td>
+                    <td>${entry.action}</td>
+                    <td>${entry.user}</td>
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${entry.shipmentId}</td>
+                    <td>${entry.notes}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== POPULATE ALERTS =====
+        function populateAlerts() {
+            updateAlertCounts();
+            renderAlerts();
+        }
+
+        function updateAlertCounts() {
+            const critical = alertsData.filter(a => a.type === 'critical' && !a.resolved).length;
+            const warnings = alertsData.filter(a => a.type === 'warning' && !a.resolved).length;
+            const resolved = alertsData.filter(a => a.resolved).length;
+
+            document.getElementById('criticalActive').textContent = critical;
+            document.getElementById('warningsActive').textContent = warnings;
+            document.getElementById('resolvedToday').textContent = resolved;
+        }
+
+        function renderAlerts() {
+            const filteredAlerts = currentFilter === 'all' 
+                ? alertsData 
+                : currentFilter === 'resolved'
+                ? alertsData.filter(a => a.resolved)
+                : alertsData.filter(a => a.type === currentFilter && !a.resolved);
+
+            const alertsList = document.getElementById('alertsList');
+            alertsList.innerHTML = filteredAlerts.map(alert => `
+                <div class="ops-alert-card ${alert.type} ${alert.resolved ? 'resolved' : ''} ops-fade-in">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div>
+                            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${
+                                    alert.type === 'critical' ? 'var(--danger)' :
+                                    alert.type === 'warning' ? 'var(--warning)' : 'var(--accent-cyan)'
+                                }; margin-right: 8px;"></div>
+                                <span class="ops-badge ${alert.type}">${alert.type.toUpperCase()}</span>
+                            </div>
+                            <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">${alert.shipmentId}</div>
+                            <div style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 8px;">${alert.client} • ${alert.time}</div>
+                        </div>
+                        ${!alert.resolved ? `<button class="ops-btn ops-btn-outline" style="font-size: 0.75rem; padding: 4px 8px;" onclick="resolveAlert('${alert.id}')">Mark as Resolved</button>` : ''}
+                    </div>
+                    <div style="color: var(--text-primary); line-height: 1.5;">${alert.message}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== WORLD MAP =====
+        function initWorldMap() {
+            const canvas = document.getElementById('worldMap');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 320;
+
+            // Simple world map representation
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--bg-surface');
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw simplified continents
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--border-color');
+            
+            // North America
+            ctx.fillRect(canvas.width * 0.15, canvas.height * 0.2, canvas.width * 0.15, canvas.height * 0.25);
+            
+            // Europe
+            ctx.fillRect(canvas.width * 0.45, canvas.height * 0.15, canvas.width * 0.08, canvas.height * 0.15);
+            
+            // Asia
+            ctx.fillRect(canvas.width * 0.55, canvas.height * 0.15, canvas.width * 0.25, canvas.height * 0.3);
+            
+            // Africa
+            ctx.fillRect(canvas.width * 0.42, canvas.height * 0.4, canvas.width * 0.1, canvas.height * 0.25);
+            
+            // Australia
+            ctx.fillRect(canvas.width * 0.75, canvas.height * 0.65, canvas.width * 0.08, canvas.height * 0.08);
+
+            // Draw shipment locations
+            const locations = [
+                { x: 0.6, y: 0.35, id: 'SHP-2841', status: 'normal' },
+                { x: 0.8, y: 0.25, id: 'SHP-2839', status: 'warning' },
+                { x: 0.2, y: 0.3, id: 'SHP-2835', status: 'normal' },
+                { x: 0.85, y: 0.7, id: 'SHP-2830', status: 'normal' },
+                { x: 0.48, y: 0.5, id: 'SHP-2828', status: 'normal' },
+                { x: 0.47, y: 0.22, id: 'SHP-2820', status: 'normal' },
+                { x: 0.55, y: 0.42, id: 'SHP-2815', status: 'warning' }
+            ];
+
+            locations.forEach(loc => {
+                const x = canvas.width * loc.x;
+                const y = canvas.height * loc.y;
+                
+                // Draw pulsing dot
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = loc.status === 'warning' ? 'var(--warning)' : 'var(--accent-cyan)';
+                ctx.fill();
+                
+                // Draw label
+                ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text-primary');
+                ctx.font = '10px Space Mono';
+                ctx.fillText(loc.id, x - 25, y - 10);
+            });
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function resolveAlert(alertId) {
+            const alert = alertsData.find(a => a.id === alertId);
+            if (alert) {
+                alert.resolved = true;
+                populateDashboard();
+                updateAlertCounts();
+                renderAlerts();
+            }
+        }
+
+        function showShipmentDetails(shipmentId) {
+            const shipment = opsShipmentsData.find(s => s.id === shipmentId);
+            if (!shipment) return;
+
+            const modalBody = document.getElementById('shipmentModalBody');
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 24px;">
+                    <h4 style="color: var(--text-primary); margin-bottom: 16px;">Shipment Progress</h4>
+                    <div class="ops-progress-bar">
+                        <div class="ops-progress-fill" style="width: ${shipment.progress}%"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-muted);">
+                        <span>Progress: ${shipment.progress}%</span>
+                        <span>ETA: ${shipment.eta}</span>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 12px;">Shipment Information</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div><strong>ID:</strong> ${shipment.id}</div>
+                            <div><strong>Client:</strong> ${shipment.client}</div>
+                            <div><strong>Product:</strong> ${shipment.product}</div>
+                            <div><strong>Origin:</strong> ${shipment.origin}</div>
+                            <div><strong>Destination:</strong> ${shipment.destination}</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: var(--text-primary); margin-bottom: 12px;">Transport Details</h4>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div><strong>Transport:</strong> ${shipment.transport}</div>
+                            <div><strong>Carrier:</strong> ${shipment.carrier}</div>
+                            <div><strong>Temp Range:</strong> ${shipment.tempRange}</div>
+                            <div><strong>Current Temp:</strong> <span class="ops-temp-value ${shipment.tempStatus}">${shipment.currentTemp}°C</span></div>
+                            <div><strong>Status:</strong> <span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">${shipment.status}</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            shipmentModalOverlay.style.display = 'flex';
+        }
+
+        function openInventoryModal(sku, currentQuantity) {
+            currentInventorySKU = sku;
+            document.getElementById('updateQuantity').value = currentQuantity;
+            inventoryModalOverlay.style.display = 'flex';
+        }
+
+        // ===== EVENT LISTENERS =====
+        function initEventListeners() {
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateTo(link.dataset.page);
+                });
+            });
+
+            // Alert tabs
+            document.querySelectorAll('.ops-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.ops-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentFilter = tab.dataset.filter;
+                    renderAlerts();
+                });
+            });
+
+            // Modals
+            shipmentModalClose.addEventListener('click', () => {
+                shipmentModalOverlay.style.display = 'none';
+            });
+
+            inventoryModalClose.addEventListener('click', () => {
+                inventoryModalOverlay.style.display = 'none';
+            });
+
+            cancelInventoryUpdate.addEventListener('click', () => {
+                inventoryModalOverlay.style.display = 'none';
+            });
+
+            inventoryUpdateForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newQuantity = parseInt(document.getElementById('updateQuantity').value);
+                
+                const item = inventoryData.find(i => i.sku === currentInventorySKU);
+                if (item) {
+                    item.quantity = newQuantity;
+                    item.lastUpdated = new Date().toISOString().split('T')[0];
+                    
+                    // Update status based on quantity
+                    if (newQuantity === 0) {
+                        item.status = 'Out of Stock';
+                    } else if (newQuantity < 200) {
+                        item.status = 'Low Stock';
+                    } else {
+                        item.status = 'Available';
+                    }
+                    
+                    populateInventory();
+                    inventoryModalOverlay.style.display = 'none';
+                }
+            });
+
+            // Close modals on overlay click
+            shipmentModalOverlay.addEventListener('click', (e) => {
+                if (e.target === shipmentModalOverlay) {
+                    shipmentModalOverlay.style.display = 'none';
+                }
+            });
+
+            inventoryModalOverlay.addEventListener('click', (e) => {
+                if (e.target === inventoryModalOverlay) {
+                    inventoryModalOverlay.style.display = 'none';
+                }
+            });
+
+            // Dropdowns
+            notificationBtn.addEventListener('click', () => {
+                notificationDropdown.style.display = notificationDropdown.style.display === 'block' ? 'none' : 'block';
+                profileDropdown.style.display = 'none';
+            });
+
+            profileBtn.addEventListener('click', () => {
+                profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                notificationDropdown.style.display = 'none';
+            });
+
+            // Close dropdowns on outside click
+            document.addEventListener('click', (e) => {
+                if (!notificationBtn.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                    notificationDropdown.style.display = 'none';
+                }
+                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+
+            // Filters for shipments
+            ['clientFilter', 'statusFilter', 'tempZoneFilter', 'transportFilter', 'sortBy'].forEach(filterId => {
+                document.getElementById(filterId)?.addEventListener('change', filterShipments);
+            });
+        }
+
+        function filterShipments() {
+            const clientFilter = document.getElementById('clientFilter')?.value || '';
+            const statusFilter = document.getElementById('statusFilter')?.value || '';
+            const tempZoneFilter = document.getElementById('tempZoneFilter')?.value || '';
+            const transportFilter = document.getElementById('transportFilter')?.value || '';
+            const sortBy = document.getElementById('sortBy')?.value || 'id';
+
+            let filtered = [...opsShipmentsData];
+
+            if (clientFilter) {
+                filtered = filtered.filter(s => s.client === clientFilter);
+            }
+            if (statusFilter) {
+                filtered = filtered.filter(s => s.status === statusFilter);
+            }
+            if (tempZoneFilter) {
+                filtered = filtered.filter(s => s.tempRange === tempZoneFilter);
+            }
+            if (transportFilter) {
+                filtered = filtered.filter(s => s.transport === transportFilter);
+            }
+
+            // Sort
+            filtered.sort((a, b) => {
+                if (sortBy === 'id') return a.id.localeCompare(b.id);
+                if (sortBy === 'client') return a.client.localeCompare(b.client);
+                if (sortBy === 'eta') return a.eta.localeCompare(b.eta);
+                if (sortBy === 'risk') return a.risk.localeCompare(b.risk);
+                return 0;
+            });
+
+            const allShipmentsTable = document.getElementById('allShipmentsTable');
+            allShipmentsTable.innerHTML = filtered.map(shipment => `
+                <tr onclick="showShipmentDetails('${shipment.id}')">
+                    <td style="font-family: 'Space Mono', monospace; font-weight: 600;">${shipment.id}</td>
+                    <td>${shipment.client}</td>
+                    <td>${shipment.product}</td>
+                    <td>${shipment.origin}</td>
+                    <td>${shipment.destination}</td>
+                    <td>${shipment.transport}</td>
+                    <td>${shipment.tempRange}</td>
+                    <td>
+                        <span class="ops-temp-value ${shipment.tempStatus}">${shipment.currentTemp}°C</span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.status === 'In Transit' ? 'normal' : shipment.status === 'At Risk' ? 'excursion' : 'warning'}">
+                            ${shipment.status}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="ops-badge ${shipment.risk === 'Low' ? 'normal' : shipment.risk === 'High' ? 'excursion' : 'warning'}">
+                            ${shipment.risk}
+                        </span>
+                    </td>
+                    <td style="font-family: 'Space Mono', monospace;">${shipment.eta}</td>
+                    <td>
+                        <span class="ops-badge ${shipment.compliance === 'Validated' ? 'normal' : 'warning'}">
+                            ${shipment.compliance}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
