@@ -201,7 +201,9 @@ function navigateTo(pageName) {
 
     // Initialize charts if needed
     if (pageName === 'dashboard') initDashboardCharts();
-    if (pageName === 'analytics') initAnalyticsCharts();
+    if (pageName === 'analytics') {
+        setTimeout(populateAnalytics, 100);
+    }
 }
 
 navLinks.forEach(link => {
@@ -617,24 +619,51 @@ function initDashboardCharts() {
 }
 
 function initAnalyticsCharts() {
-    if (analyticsChartsInit) return;
-    analyticsChartsInit = true;
+    console.log('initAnalyticsCharts called');
+    
+    // Destroy existing instances before creating new ones
+    if (window.regionChartInstance) {
+        window.regionChartInstance.destroy();
+        console.log('Destroyed existing regionChart');
+    }
+    if (window.weeklyChartInstance) {
+        window.weeklyChartInstance.destroy();
+        console.log('Destroyed existing weeklyChart');
+    }
+    if (window.transportChartInstance) {
+        window.transportChartInstance.destroy();
+        console.log('Destroyed existing transportChart');
+    }
 
-    // Orders Per Month — Bar
-    const ctxBar = document.getElementById('chartAnalyticsOrders').getContext('2d');
-    const barGradient = ctxBar.createLinearGradient(0, 0, 0, 280);
-    barGradient.addColorStop(0, 'rgba(79, 140, 255, 0.85)');
-    barGradient.addColorStop(1, 'rgba(79, 140, 255, 0.15)');
+    // Check if canvas elements exist
+    const regionCanvas = document.getElementById("regionChart");
+    const weeklyCanvas = document.getElementById("weeklyChart");
+    const transportCanvas = document.getElementById("transportChart");
+    
+    console.log('Canvas elements found:', regionCanvas, weeklyCanvas, transportCanvas);
+    
+    if (!regionCanvas || !weeklyCanvas || !transportCanvas) {
+        console.log('Missing canvas elements, aborting chart initialization');
+        return;
+    }
 
-    chartInstances.analyticsOrders = new Chart(ctxBar, {
+    console.log('All canvas elements found, creating charts...');
+
+    // Chart 1 — Bar Graph "Total Shipments Across Regions"
+    const ctxRegional = regionCanvas.getContext('2d');
+    const regionalGradient = ctxRegional.createLinearGradient(0, 0, 0, 300);
+    regionalGradient.addColorStop(0, 'rgba(0, 212, 255, 0.8)');
+    regionalGradient.addColorStop(1, 'rgba(0, 212, 255, 0.15)');
+
+    window.regionChartInstance = new Chart(ctxRegional, {
         type: 'bar',
         data: {
-            labels: ['Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+            labels: ["North America", "Europe", "Asia Pacific", "Middle East", "Africa", "South America"],
             datasets: [{
-                label: 'Orders',
-                data: [18, 24, 20, 32, 28, 36, 14],
-                backgroundColor: barGradient,
-                borderColor: chartColors.blue,
+                label: 'Shipments',
+                data: [68, 84, 71, 29, 18, 22],
+                backgroundColor: regionalGradient,
+                borderColor: '#00d4ff',
                 borderWidth: 1.5,
                 borderRadius: 6,
                 borderSkipped: false,
@@ -647,9 +676,9 @@ function initAnalyticsCharts() {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#0f172a',
-                    titleColor: '#e8f4ff',
-                    bodyColor: '#94a3b8',
+                    backgroundColor: document.body.classList.contains('dark-mode') ? '#0f172a' : '#ffffff',
+                    titleColor: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38',
+                    bodyColor: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7a8d',
                     padding: 12,
                     cornerRadius: 8,
                 }
@@ -658,27 +687,97 @@ function initAnalyticsCharts() {
                 x: {
                     grid: { display: false },
                     border: { display: false },
-                    ticks: { font: { size: 12, weight: 500 } }
+                    ticks: { 
+                        font: { size: 12, weight: 500 },
+                        color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
+                    }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+                    grid: { 
+                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', 
+                        drawBorder: false 
+                    },
                     border: { display: false },
-                    ticks: { font: { size: 12 }, stepSize: 10 }
+                    ticks: { 
+                        font: { size: 12 }, 
+                        stepSize: 20,
+                        color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
+                    }
                 }
             }
         }
     });
 
-    // Delivery Success Rate — Pie
-    const ctxPie = document.getElementById('chartDeliverySuccess').getContext('2d');
-    chartInstances.deliverySuccess = new Chart(ctxPie, {
+    // Chart 2 — Line Chart "Shipments Per Week"
+    const ctxWeekly = weeklyCanvas.getContext('2d');
+    window.weeklyChartInstance = new Chart(ctxWeekly, {
+        type: 'line',
+        data: {
+            labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7", "Week 8"],
+            datasets: [{
+                label: 'Shipments',
+                data: [28, 35, 31, 42, 38, 45, 41, 52],
+                borderColor: '#00ff9d',
+                backgroundColor: 'rgba(0, 255, 157, 0.08)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: '#00ff9d',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: document.body.classList.contains('dark-mode') ? '#0f172a' : '#ffffff',
+                    titleColor: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38',
+                    bodyColor: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7a8d',
+                    padding: 12,
+                    cornerRadius: 8,
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: { 
+                        font: { size: 12, weight: 500 },
+                        color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { 
+                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', 
+                        drawBorder: false 
+                    },
+                    border: { display: false },
+                    ticks: { 
+                        font: { size: 12 }, 
+                        stepSize: 10,
+                        color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
+                    }
+                }
+            }
+        }
+    });
+
+    // Chart 3 — Donut Chart "Shipments by Transport Mode"
+    const ctxTransport = transportCanvas.getContext('2d');
+    window.transportChartInstance = new Chart(ctxTransport, {
         type: 'doughnut',
         data: {
-            labels: ['On-Time', 'Delayed', 'Failed'],
+            labels: ["Air", "Sea", "Rail", "Road"],
             datasets: [{
-                data: [96.4, 3.1, 0.5],
-                backgroundColor: [chartColors.green, chartColors.orange, chartColors.red],
+                data: [124, 67, 43, 58],
+                backgroundColor: ["#00d4ff", "#0099bb", "#ffb830", "#00ff9d"],
                 borderWidth: 0,
                 hoverOffset: 6,
             }]
@@ -690,17 +789,18 @@ function initAnalyticsCharts() {
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { font: { size: 12 }, padding: 16 }
+                    labels: { 
+                        font: { size: 12 }, 
+                        padding: 16,
+                        color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
+                    }
                 },
                 tooltip: {
-                    backgroundColor: '#0f172a',
-                    titleColor: '#e8f4ff',
-                    bodyColor: '#94a3b8',
+                    backgroundColor: document.body.classList.contains('dark-mode') ? '#0f172a' : '#ffffff',
+                    titleColor: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38',
+                    bodyColor: document.body.classList.contains('dark-mode') ? '#94a3b8' : '#6b7a8d',
                     padding: 12,
                     cornerRadius: 8,
-                    callbacks: {
-                        label: (ctx) => ` ${ctx.label}: ${ctx.parsed}%`
-                    }
                 }
             }
         }
@@ -791,6 +891,53 @@ function init() {
     renderNotifications();
     renderOrders();
     initDashboardCharts();
+    
+    // Force update analytics stats immediately for testing
+    updateAnalyticsStats();
+    
+    // Only initialize analytics charts if analytics page is active
+    if (document.getElementById('page-analytics').classList.contains('active')) {
+        setTimeout(function() {
+            initAnalyticsCharts();
+            updateAnalyticsStats();
+        }, 150);
+    }
+}
+
+function populateAnalytics() {
+    // Populate stat cards with data
+    document.getElementById('totalShipments').textContent = ORDERS.length;
+    document.getElementById('avgRiskScore').textContent = 'Low';
+    document.getElementById('totalCost').textContent = '$2,847,500';
+    document.getElementById('missingDocs').textContent = '12';
+    
+    // Initialize charts
+    initAnalyticsCharts();
+}
+
+// Initialize charts when analytics page is opened
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        if (link.dataset.page === 'analytics') {
+            setTimeout(populateAnalytics, 100);
+        }
+    });
+});
+
+function updateAnalyticsStats() {
+    populateAnalytics();
+}
+
+function calculateAverageRiskScore() {
+    const riskScores = ORDERS.map(o => {
+        if (o.tempStatus === 'Excursion') return 3;
+        if (o.tempStatus === 'Warning') return 2;
+        return 1;
+    });
+    const average = riskScores.reduce((a, b) => a + b, 0) / riskScores.length;
+    if (average >= 2.5) return 'High';
+    if (average >= 1.5) return 'Medium';
+    return 'Low';
 }
 
 document.addEventListener('DOMContentLoaded', init);

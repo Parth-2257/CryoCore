@@ -821,69 +821,43 @@ body.dark-mode .profile-action-btn:hover {
 
 /* Status Badges */
 .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    white-space: nowrap;
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
-
-.badge::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
 .badge.processing {
-    background: var(--info-blue-bg);
-    color: var(--info-blue);
+  background: rgba(255, 184, 48, 0.15);
+  color: #ffb830;
+  border: 1px solid rgba(255, 184, 48, 0.3);
 }
-
-.badge.processing::before {
-    background: var(--info-blue);
-}
-
-.badge.shipped,
 .badge.in-transit {
-    background: var(--accent-cyan-light);
-    color: var(--accent-cyan-hover);
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
 }
-
-.badge.shipped::before,
-.badge.in-transit::before {
-    background: var(--accent-cyan-hover);
-}
-
 .badge.delivered {
-    background: var(--success-bg);
-    color: #008a6e;
+  background: rgba(0, 255, 157, 0.15);
+  color: #00ff9d;
+  border: 1px solid rgba(0, 255, 157, 0.3);
 }
-
-.badge.delivered::before {
-    background: var(--success);
+.badge.at-risk {
+  background: rgba(255, 71, 87, 0.15);
+  color: #ff4757;
+  border: 1px solid rgba(255, 71, 87, 0.3);
 }
-
-.badge.delayed {
-    background: var(--warning-bg);
-    color: #c08b00;
+.badge.pending {
+  background: rgba(107, 138, 170, 0.15);
+  color: #6b8aaa;
+  border: 1px solid rgba(107, 138, 170, 0.3);
 }
-
-.badge.delayed::before {
-    background: var(--warning);
-}
-
-.badge.preparing {
-    background: rgba(168, 85, 247, 0.1);
-    color: #7c3aed;
-}
-
-.badge.preparing::before {
-    background: #a855f7;
+.badge.cancelled {
+  background: rgba(107, 138, 170, 0.1);
+  color: #6b8aaa;
+  border: 1px solid rgba(107, 138, 170, 0.2);
 }
 
 /* Temperature Badges */
