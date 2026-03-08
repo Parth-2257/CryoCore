@@ -202,7 +202,11 @@ function navigateTo(pageName) {
     // Initialize charts if needed
     if (pageName === 'dashboard') initDashboardCharts();
     if (pageName === 'analytics') {
-        setTimeout(populateAnalytics, 100);
+        setTimeout(function () {
+            if (typeof initAnalyticsCharts === 'function') {
+                initAnalyticsCharts();
+            }
+        }, 200);
     }
 }
 
@@ -222,7 +226,7 @@ if (btnCreateOrder) {
 function showOrderModal(order) {
     const modal = document.getElementById('orderModalOverlay');
     const stage = getProgressStage(order.status);
-    
+
     // Update progress pipeline
     document.querySelectorAll('.progress-step').forEach(step => {
         step.classList.remove('completed', 'active');
@@ -237,7 +241,7 @@ function showOrderModal(order) {
             }
         }
     });
-    
+
     // Update details
     document.getElementById('detailProduct').textContent = order.product;
     document.getElementById('detailTempRange').textContent = order.tempRange;
@@ -246,7 +250,7 @@ function showOrderModal(order) {
     document.getElementById('detailDelivery').textContent = formatDate(order.created);
     document.getElementById('detailCreated').textContent = formatDate(order.created);
     document.getElementById('detailStatus').textContent = statusBadge(order.status);
-    
+
     modal.classList.add('open');
 }
 
@@ -319,7 +323,7 @@ function tempStatusBadge(status) {
         'Warning': { class: 'warning', icon: '⚠️', text: 'Warning' },
         'Excursion': { class: 'critical', icon: '🚨', text: 'Excursion' }
     };
-    
+
     const statusInfo = statusMap[status] || statusMap['Normal'];
     return `<span class="temp-badge ${statusInfo.class}">${statusInfo.icon} ${statusInfo.text}</span>`;
 }
@@ -361,19 +365,19 @@ function sortOrders(orders) {
     sorted.sort((a, b) => {
         let aVal = a[sortState.column];
         let bVal = b[sortState.column];
-        
+
         // Handle different data types
         if (sortState.column === 'id') {
             aVal = aVal.split('-').join('');
             bVal = bVal.split('-').join('');
         }
-        
+
         if (sortState.column === 'status') {
             const statusOrder = { 'Processing': 1, 'In Transit': 2, 'Delivered': 3 };
             aVal = statusOrder[a.status] || 0;
             bVal = statusOrder[b.status] || 0;
         }
-        
+
         if (sortState.direction === 'asc') {
             return aVal > bVal ? 1 : -1;
         } else {
@@ -384,16 +388,16 @@ function sortOrders(orders) {
 }
 
 function renderOrders() {
-    const activeOrders = ORDERS.filter(o => 
+    const activeOrders = ORDERS.filter(o =>
         o.status === 'Processing' || o.status === 'In Transit' || o.status === 'Preparing'
     );
-    const historyOrders = ORDERS.filter(o => 
+    const historyOrders = ORDERS.filter(o =>
         o.status === 'Delivered' || o.status === 'Cancelled' || o.status === 'Completed'
     );
-    
+
     const sortedActive = sortOrders(activeOrders);
     const sortedHistory = sortOrders(historyOrders);
-    
+
     // Render active orders
     const activeBody = document.getElementById('activeOrdersBody');
     activeBody.innerHTML = '';
@@ -407,7 +411,7 @@ function renderOrders() {
             <td>${statusBadge(o.status)}</td>
         </tr>`;
     });
-    
+
     // Render history orders
     const historyBody = document.getElementById('historyOrdersBody');
     historyBody.innerHTML = '';
@@ -421,7 +425,7 @@ function renderOrders() {
             <td>${statusBadge(o.status)}</td>
         </tr>`;
     });
-    
+
     // Add click handlers for order details
     document.querySelectorAll('#activeOrdersBody tr, #historyOrdersBody tr').forEach(row => {
         row.addEventListener('click', () => {
@@ -430,7 +434,7 @@ function renderOrders() {
             if (order) showOrderModal(order);
         });
     });
-    
+
     // Update sortable header classes
     document.querySelectorAll('.sortable').forEach(th => {
         th.classList.remove('asc', 'desc');
@@ -620,7 +624,7 @@ function initDashboardCharts() {
 
 function initAnalyticsCharts() {
     console.log('initAnalyticsCharts called');
-    
+
     // Destroy existing instances before creating new ones
     if (window.regionChartInstance) {
         window.regionChartInstance.destroy();
@@ -639,9 +643,9 @@ function initAnalyticsCharts() {
     const regionCanvas = document.getElementById("regionChart");
     const weeklyCanvas = document.getElementById("weeklyChart");
     const transportCanvas = document.getElementById("transportChart");
-    
+
     console.log('Canvas elements found:', regionCanvas, weeklyCanvas, transportCanvas);
-    
+
     if (!regionCanvas || !weeklyCanvas || !transportCanvas) {
         console.log('Missing canvas elements, aborting chart initialization');
         return;
@@ -687,20 +691,20 @@ function initAnalyticsCharts() {
                 x: {
                     grid: { display: false },
                     border: { display: false },
-                    ticks: { 
+                    ticks: {
                         font: { size: 12, weight: 500 },
                         color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
                     }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { 
-                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', 
-                        drawBorder: false 
+                    grid: {
+                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                        drawBorder: false
                     },
                     border: { display: false },
-                    ticks: { 
-                        font: { size: 12 }, 
+                    ticks: {
+                        font: { size: 12 },
                         stepSize: 20,
                         color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
                     }
@@ -747,20 +751,20 @@ function initAnalyticsCharts() {
                 x: {
                     grid: { display: false },
                     border: { display: false },
-                    ticks: { 
+                    ticks: {
                         font: { size: 12, weight: 500 },
                         color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
                     }
                 },
                 y: {
                     beginAtZero: true,
-                    grid: { 
-                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', 
-                        drawBorder: false 
+                    grid: {
+                        color: document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+                        drawBorder: false
                     },
                     border: { display: false },
-                    ticks: { 
-                        font: { size: 12 }, 
+                    ticks: {
+                        font: { size: 12 },
                         stepSize: 10,
                         color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
                     }
@@ -789,8 +793,8 @@ function initAnalyticsCharts() {
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { 
-                        font: { size: 12 }, 
+                    labels: {
+                        font: { size: 12 },
                         padding: 16,
                         color: document.body.classList.contains('dark-mode') ? '#e8f4ff' : '#0d1f38'
                     }
@@ -891,41 +895,6 @@ function init() {
     renderNotifications();
     renderOrders();
     initDashboardCharts();
-    
-    // Force update analytics stats immediately for testing
-    updateAnalyticsStats();
-    
-    // Only initialize analytics charts if analytics page is active
-    if (document.getElementById('page-analytics').classList.contains('active')) {
-        setTimeout(function() {
-            initAnalyticsCharts();
-            updateAnalyticsStats();
-        }, 150);
-    }
-}
-
-function populateAnalytics() {
-    // Populate stat cards with data
-    document.getElementById('totalShipments').textContent = ORDERS.length;
-    document.getElementById('avgRiskScore').textContent = 'Low';
-    document.getElementById('totalCost').textContent = '$2,847,500';
-    document.getElementById('missingDocs').textContent = '12';
-    
-    // Initialize charts
-    initAnalyticsCharts();
-}
-
-// Initialize charts when analytics page is opened
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        if (link.dataset.page === 'analytics') {
-            setTimeout(populateAnalytics, 100);
-        }
-    });
-});
-
-function updateAnalyticsStats() {
-    populateAnalytics();
 }
 
 function calculateAverageRiskScore() {

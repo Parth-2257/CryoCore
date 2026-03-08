@@ -8,7 +8,7 @@
     <meta name="description"
         content="CryoCore Client Dashboard — Manage orders, track shipments, monitor temperature compliance and view analytics for your pharmaceutical cold-chain logistics." />
     <link rel="stylesheet" href="css/dashboard.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 </head>
 
 <body>
@@ -33,8 +33,8 @@
         <div class="dash-navbar-right">
             <!-- Dark Mode Toggle -->
             <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
-                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="5"></circle>
                     <line x1="12" y1="1" x2="12" y2="3"></line>
                     <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -45,9 +45,11 @@
                     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                 </svg>
-                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-                    <path d="M21 12.79A9 9 0 1 1 12 3a9 9 0 0 1 1 9 9.79c0 .5-.03.85-.25.85-.56 0-.29-.03-.56.25-.56.56 0 .3.04.56.25.56.56A9 9 0 0 1 1 21 12.79z"></path>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                    <path
+                        d="M21 12.79A9 9 0 1 1 12 3a9 9 0 0 1 1 9 9.79c0 .5-.03.85-.25.85-.56 0-.29-.03-.56.25-.56.56 0 .3.04.56.25.56.56A9 9 0 0 1 1 21 12.79z">
+                    </path>
                 </svg>
             </button>
             <!-- Notification Bell -->
@@ -92,14 +94,16 @@
                     </div>
                     <div class="profile-dropdown-actions">
                         <button class="profile-action-btn" id="profileBtn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                             My Profile
                         </button>
                         <button class="profile-action-btn" id="settingsBtn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <circle cx="12" cy="12" r="3"></circle>
                                 <path d="M12 1v6m0 6v6m4.22-13.22 4.22 4.22"></path>
                                 <path d="M20.78 8.22 4.22 4.22"></path>
@@ -107,7 +111,8 @@
                             Settings
                         </button>
                         <button class="profile-action-btn" id="helpBtn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <path d="M9.09 9a3 3 0 0 1 0 5.83 5.83 3 3 0 0 1 0-5.83-5.83"></path>
                                 <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -116,7 +121,8 @@
                         </button>
                         <div style="height: 1px; background: var(--border-color); margin: 8px 0;"></div>
                         <button class="profile-action-btn" id="logoutBtn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                                 <polyline points="16 17 21 12 16 7"></polyline>
                                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -284,7 +290,7 @@
             </div>
 
             <!-- Recent Orders -->
-            <div class="table-card">
+            <!-- <div class="table-card">
                 <div class="table-card-header">
                     <h3>Recent Orders</h3>
                 </div>
@@ -302,11 +308,11 @@
                             </tr>
                         </thead>
                         <tbody id="recentOrdersBody">
-                            <!-- Filled by JS -->
-                        </tbody>
+                             Filled by JS -->
+            <!-- </tbody>
                     </table>
                 </div>
-            </div>
+            </div> -->
         </section>
 
         <!-- ========== PAGE: ORDERS ========== -->
@@ -476,7 +482,8 @@
                             </svg>
                             Place Another Order
                         </button>
-                        <button class="btn-action" id="btnBackToDashboard" style="background: transparent; border: 2px solid var(--accent-cyan); color: var(--accent-cyan);">
+                        <button class="btn-action" id="btnBackToDashboard"
+                            style="background: transparent; border: 2px solid var(--accent-cyan); color: var(--accent-cyan);">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="15 18 9 12 15 6"></polyline>
@@ -486,96 +493,259 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- ANALYTICS -->
-        <section class="dash-page" id="page-analytics">
-            <div class="page-header">
-                <div>
-                    <h1>Analytics</h1>
-                    <p class="page-subtitle">Comprehensive insights into your pharmaceutical logistics operations.</p>
-                </div>
             </div>
 
-            <!-- TOP STATS ROW -->
-            <div class="stat-cards">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
-                        </svg>
-                    </div>
+            <section class="dash-page" id="page-analytics">
+                <style>
+                    .analytics-stagger-card {
+                        opacity: 0;
+                        animation: fadeInUpAnalytics 0.6s ease forwards;
+                    }
+
+                    .analytics-stagger-card:nth-child(1) {
+                        animation-delay: 0s;
+                    }
+
+                    .analytics-stagger-card:nth-child(2) {
+                        animation-delay: 0.1s;
+                    }
+
+                    .analytics-stagger-card:nth-child(3) {
+                        animation-delay: 0.2s;
+                    }
+
+                    .analytics-stagger-card:nth-child(4) {
+                        animation-delay: 0.3s;
+                    }
+
+                    .chart-fade-in {
+                        opacity: 0;
+                        animation: fadeInUpAnalytics 0.6s ease forwards;
+                    }
+
+                    .chart-bar-delay {
+                        animation-delay: 0.4s;
+                    }
+
+                    .chart-side-delay {
+                        animation-delay: 0.5s;
+                    }
+
+                    @keyframes fadeInUpAnalytics {
+                        from {
+                            opacity: 0;
+                            transform: translateY(20px);
+                        }
+
+                        to {
+                            opacity: 1;
+                            transform: translateY(0);
+                        }
+                    }
+
+                    .analytics-grid-4 {
+                        display: grid;
+                        grid-template-columns: repeat(4, 1fr);
+                        gap: 16px;
+                        margin-bottom: 24px;
+                    }
+
+                    .analytics-card {
+                        background: var(--bg-card);
+                        border: 1px solid var(--border-color);
+                        border-radius: 12px;
+                        padding: 24px;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .analytics-card:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+                    }
+
+                    .analytics-stat-row {
+                        display: flex;
+                        align-items: center;
+                        gap: 16px;
+                        margin-bottom: 12px;
+                    }
+
+                    .analytics-icon-circle {
+                        width: 44px;
+                        height: 44px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-shrink: 0;
+                    }
+
+                    .analytics-stat-value {
+                        font-size: 1.85rem;
+                        font-weight: 800;
+                        font-family: var(--font-headline);
+                        color: var(--text-primary);
+                        line-height: 1.2;
+                    }
+
+                    .analytics-stat-label {
+                        font-size: 0.88rem;
+                        font-weight: 600;
+                        color: var(--text-primary);
+                        margin-bottom: 2px;
+                    }
+
+                    .analytics-stat-subtitle {
+                        font-size: 0.78rem;
+                        color: var(--text-muted);
+                    }
+
+                    .transport-stat-row {
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 10px 0;
+                        border-bottom: 1px solid var(--border-color);
+                        font-size: 0.85rem;
+                    }
+
+                    .transport-stat-row:last-child {
+                        border-bottom: none;
+                    }
+                </style>
+
+                <div class="page-header">
                     <div>
-                        <div class="stat-number" id="totalShipments">12</div>
-                        <div class="stat-label">Total Shipments</div>
+                        <h1>Analytics</h1>
+                        <p class="page-subtitle">Comprehensive insights into your pharmaceutical logistics operations.
+                        </p>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--success-bg); color: var(--success);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-2 8-5 5-5 5 5 5 5-5 5-5z"></path>
-                            <polyline points="12 6 12 2 7 7"></polyline>
-                        </svg>
+                <!-- ROW 1: 4 STAT CARDS -->
+                <div class="analytics-grid-4">
+                    <div class="analytics-card analytics-stagger-card">
+                        <div class="analytics-stat-row">
+                            <div class="analytics-icon-circle"
+                                style="background: rgba(0, 212, 255, 0.1); color: #00d4ff;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z">
+                                    </path>
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="analytics-stat-value" id="analyticsTotalShipments">247</div>
+                        </div>
+                        <div class="analytics-stat-label">Total Shipments</div>
+                        <div class="analytics-stat-subtitle">Across all regions</div>
                     </div>
-                    <div>
-                        <div class="stat-number" id="avgRiskScore">Low</div>
-                        <div class="stat-label">Average Risk Score</div>
+
+                    <div class="analytics-card analytics-stagger-card">
+                        <div class="analytics-stat-row">
+                            <div class="analytics-icon-circle"
+                                style="background: rgba(0, 255, 157, 0.1); color: #00ff9d;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                            </div>
+                            <div class="analytics-stat-value" style="color: #00ff9d;">Low</div>
+                        </div>
+                        <div class="analytics-stat-label">Average Risk Score</div>
+                        <div class="analytics-stat-subtitle">Within safe threshold</div>
+                    </div>
+
+                    <div class="analytics-card analytics-stagger-card">
+                        <div class="analytics-stat-row">
+                            <div class="analytics-icon-circle"
+                                style="background: rgba(0, 212, 255, 0.1); color: #00d4ff;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"></line>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div class="analytics-stat-value">$2,847,500</div>
+                        </div>
+                        <div class="analytics-stat-label">Total Cost This Quarter</div>
+                        <div class="analytics-stat-subtitle">Q1 2025</div>
+                    </div>
+
+                    <div class="analytics-card analytics-stagger-card">
+                        <div class="analytics-stat-row">
+                            <div class="analytics-icon-circle"
+                                style="background: rgba(255, 71, 87, 0.1); color: #ff4757;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                                    <line x1="12" y1="13" x2="12" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="analytics-stat-value" style="color: #ff4757;">12</div>
+                        </div>
+                        <div class="analytics-stat-label">Missing Documents</div>
+                        <div class="analytics-stat-subtitle" style="color: #ff4757;">Requires attention</div>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <path d="M12 7v4a1 1 0 011 1h3a1 1 0 011-1V7a1 1 0 00-1-1H8a1 1 0 00-1 1v4a1 1 0 001 1h3a1 1 0 011-1V7a1 1 0 00-1-1H8z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="stat-number" id="totalCost">$2,847,500</div>
-                        <div class="stat-label">Total Cost This Quarter</div>
+                <!-- ROW 2: BAR CHART -->
+                <div class="analytics-card chart-fade-in chart-bar-delay" style="margin-bottom: 24px;">
+                    <h3 class="chart-title" style="margin-bottom: 4px;">Total Shipments Across Regions</h3>
+                    <p class="analytics-stat-subtitle" style="margin-bottom: 24px;">Shipment volume by global region</p>
+                    <div style="height: 280px; position: relative;">
+                        <canvas id="analyticsRegionChart"></canvas>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon" style="background: var(--danger-bg); color: var(--danger);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 1-1.42L12 12l2.17-4.42a2 2 0 0 1 1.42L13.71 3.86a2 2 0 0 0-2.58L12 7l-2.17 4.42a2 2 0 0 0-1.42L10.29 3.86a2 2 0 0 0 2.58z"></path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                        </svg>
+                <!-- ROW 3: TWO CHARTS SIDE BY SIDE -->
+                <div style="display: grid; grid-template-columns: 60% 40%; gap: 16px; margin-bottom: 32px;">
+                    <div class="analytics-card chart-fade-in chart-side-delay">
+                        <h3 class="chart-title" style="margin-bottom: 4px;">Shipments Per Week</h3>
+                        <p class="analytics-stat-subtitle" style="margin-bottom: 24px;">Weekly shipment trend over 8
+                            weeks</p>
+                        <div style="height: 260px; position: relative;">
+                            <canvas id="analyticsWeeklyChart"></canvas>
+                        </div>
                     </div>
-                    <div>
-                        <div class="stat-number" id="missingDocs">12</div>
-                        <div class="stat-label">Missing Documents</div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- CHARTS SECTION -->
-            <div class="charts-row">
-                <div class="chart-card">
-                    <h3 class="chart-title">Total Shipments Across Regions</h3>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="regionChart"></canvas>
+                    <div class="analytics-card chart-fade-in chart-side-delay">
+                        <h3 class="chart-title" style="margin-bottom: 4px;">Shipments by Transport Mode</h3>
+                        <p class="analytics-stat-subtitle" style="margin-bottom: 20px;">Distribution across transport
+                            types</p>
+                        <div style="height: 200px; position: relative; margin-bottom: 24px;">
+                            <canvas id="analyticsTransportChart"></canvas>
+                        </div>
+                        <div class="transport-stats">
+                            <div class="transport-stat-row">
+                                <span style="color: var(--text-primary);">✈️ Air</span>
+                                <span style="color: #00d4ff; font-weight: 600;">124 shipments <span
+                                        style="margin-left:8px; opacity:0.6; font-weight:400;">42.5%</span></span>
+                            </div>
+                            <div class="transport-stat-row">
+                                <span style="color: var(--text-primary);">🚢 Sea</span>
+                                <span style="color: #0099bb; font-weight: 600;">67 shipments <span
+                                        style="margin-left:8px; opacity:0.6; font-weight:400;">23.0%</span></span>
+                            </div>
+                            <div class="transport-stat-row">
+                                <span style="color: var(--text-primary);">🚂 Rail</span>
+                                <span style="color: #ffb830; font-weight: 600;">43 shipments <span
+                                        style="margin-left:8px; opacity:0.6; font-weight:400;">14.7%</span></span>
+                            </div>
+                            <div class="transport-stat-row">
+                                <span style="color: var(--text-primary);">🚛 Road</span>
+                                <span style="color: #00ff9d; font-weight: 600;">58 shipments <span
+                                        style="margin-left:8px; opacity:0.6; font-weight:400;">19.9%</span></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="charts-row" style="margin-top: 20px;">
-                <div class="chart-card" style="flex: 0 0 60%;">
-                    <h3 class="chart-title">Shipments Per Week</h3>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="weeklyChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card" style="flex: 0 0 40%;">
-                    <h3 class="chart-title">Shipments by Transport Mode</h3>
-                    <div style="height: 300px; position: relative;">
-                        <canvas id="transportChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
     </main>
 
@@ -599,7 +769,8 @@
                     <div class="progress-pipeline" id="progressPipeline">
                         <div class="progress-step" data-stage="ordered">
                             <div class="progress-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <path d="M9 11l3 3L22 4"></path>
                                     <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
                                 </svg>
@@ -608,7 +779,8 @@
                         </div>
                         <div class="progress-step" data-stage="shipped">
                             <div class="progress-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <rect x="1" y="6" width="22" height="12" rx="2" ry="2"></rect>
                                     <path d="M1 10h22"></path>
                                 </svg>
@@ -617,7 +789,8 @@
                         </div>
                         <div class="progress-step" data-stage="in-transit">
                             <div class="progress-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <circle cx="12" cy="12" r="10"></circle>
                                     <polyline points="12 6 12 12 16 14"></polyline>
                                 </svg>
@@ -626,15 +799,19 @@
                         </div>
                         <div class="progress-step" data-stage="distribution">
                             <div class="progress-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z">
+                                    </path>
                                 </svg>
                             </div>
                             <div class="progress-label">Distribution Center</div>
                         </div>
                         <div class="progress-step" data-stage="delivered">
                             <div class="progress-icon">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
                                     <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                 </svg>
@@ -683,6 +860,180 @@
     </div>
 
     <script src="js/dashboard.js"></script>
+    <script>
+        // Use exact logic as requested by client
+        function initAnalyticsCharts() {
+            const section = document.getElementById('page-analytics');
+            if (!section) return;
+
+            const isVisible = section.style.display !== 'none' && section.offsetParent !== null;
+
+            if (!isVisible) {
+                setTimeout(function () {
+                    initAnalyticsCharts();
+                }, 200);
+                return;
+            }
+
+            const canvas1 = document.getElementById('analyticsRegionChart');
+            const canvas2 = document.getElementById('analyticsWeeklyChart');
+            const canvas3 = document.getElementById('analyticsTransportChart');
+
+            if (!canvas1 || !canvas2 || !canvas3) return;
+
+            const isDark = document.body.classList.contains('dark-mode');
+            const gridColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+            const tickColor = isDark ? "#6b8aaa" : "#6b7a8d";
+            const legendLabelColor = isDark ? "#6b8aaa" : "#0d1f38";
+
+            if (window.analyticsRegionInstance) window.analyticsRegionInstance.destroy();
+            if (window.analyticsWeeklyInstance) window.analyticsWeeklyInstance.destroy();
+            if (window.analyticsTransportInstance) window.analyticsTransportInstance.destroy();
+
+            // Dynamic Total Shipments Count
+            const totalShipmentsEl = document.getElementById('analyticsTotalShipments');
+            if (totalShipmentsEl) {
+                if (typeof ORDERS !== 'undefined' && ORDERS.length > 0) {
+                    totalShipmentsEl.textContent = ORDERS.length;
+                } else {
+                    totalShipmentsEl.textContent = '247';
+                }
+            }
+
+            window.analyticsRegionInstance = new Chart(canvas1, {
+                type: "bar",
+                data: {
+                    labels: ["North America", "Europe", "Asia Pacific", "Middle East", "Africa", "South America"],
+                    datasets: [{
+                        data: [68, 84, 71, 29, 18, 22],
+                        backgroundColor: "rgba(0,212,255,0.7)",
+                        borderColor: "#00d4ff",
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        hoverBackgroundColor: "rgba(0,212,255,1)"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: tickColor },
+                            border: { color: "transparent" }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: tickColor },
+                            border: { color: "transparent" }
+                        }
+                    }
+                }
+            });
+
+            window.analyticsWeeklyInstance = new Chart(canvas2, {
+                type: "line",
+                data: {
+                    labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Week 7", "Week 8"],
+                    datasets: [{
+                        data: [28, 35, 31, 42, 38, 45, 41, 52],
+                        borderColor: "#00ff9d",
+                        backgroundColor: "rgba(0,255,157,0.08)",
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: "#00ff9d",
+                        pointBorderColor: "#020b18",
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: tickColor }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: tickColor }
+                        }
+                    }
+                }
+            });
+
+            window.analyticsTransportInstance = new Chart(canvas3, {
+                type: "doughnut",
+                data: {
+                    labels: ["Air", "Sea", "Rail", "Road"],
+                    datasets: [{
+                        data: [124, 67, 43, 58],
+                        backgroundColor: ["#00d4ff", "#0099bb", "#ffb830", "#00ff9d"],
+                        borderColor: isDark ? "#0d1f38" : "#ffffff",
+                        borderWidth: 3,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "70%",
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: "bottom",
+                            labels: { color: legendLabelColor, padding: 16, usePointStyle: true }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: "centerText",
+                    beforeDraw(chart) {
+                        const { width, height, ctx } = chart;
+                        ctx.restore();
+                        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        ctx.font = "bold 28px Manrope";
+                        ctx.fillStyle = isDark ? "#e8f4ff" : "#0d1f38";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(total, width / 2, height / 2 - 10);
+                        ctx.font = "14px Space Grotesk";
+                        ctx.fillStyle = isDark ? "#6b8aaa" : "#6b7a8d";
+                        ctx.fillText("Shipments", width / 2, height / 2 + 18);
+                        ctx.save();
+                    }
+                }]
+            });
+        }
+
+        // Track clicks on the Analytics nav item
+        document.querySelectorAll('.sidebar-link[data-page="analytics"]').forEach(link => {
+            link.addEventListener('click', function () {
+                setTimeout(function () {
+                    initAnalyticsCharts();
+                }, 200);
+            });
+        });
+
+        // Re-init on dark mode toggle
+        const modeToggleBtn = document.getElementById('darkModeToggle');
+        if (modeToggleBtn) {
+            modeToggleBtn.addEventListener('click', function () {
+                setTimeout(function () {
+                    if (window.analyticsRegionInstance) {
+                        window.analyticsRegionInstance.destroy();
+                        window.analyticsWeeklyInstance.destroy();
+                        window.analyticsTransportInstance.destroy();
+                        initAnalyticsCharts();
+                    }
+                }, 100); // Small delay to let classes update
+            });
+        }
+    </script>
 </body>
 
 </html>
