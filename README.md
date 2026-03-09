@@ -98,30 +98,6 @@ CryoCore is a frontend-only proof of concept built with pure HTML, CSS, and Java
 10. OPS monitors temperature compliance, resolves alerts, and approves documents.
 11. Shipment delivered, compliance logged.
 
-## Demo Links
-
-- **Live Demo Link**: [https://cryocore.vercel.app](https://cryocore.vercel.app)
-- **Demo Video Link**: [To be added]
-- **GitHub Repository**: [To be added]
-
-## Team
-
-| Member Name | Role | Responsibilities |
-| :--- | :--- | :--- |
-| | | |
-| | | |
-| | | |
-| | | |
-
-## Hackathon Deliverables
-
-- Fully functional frontend POC
-- Client Portal with order management and analytics
-- OPS Control Tower with live map, route planner, compliance, and alerts
-- Live Shipments Map with animated routes
-- README documentation
-- Deployed on Vercel
-
 ## Future Scope
 
 ### Short Term
